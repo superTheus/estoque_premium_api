@@ -99,8 +99,10 @@ class CompanyModel extends Connection
     try {
       $stmt = $this->conn->prepare($sql);
 
-      foreach ($filter as $column => $value) {
-        $stmt->bindValue(":$column", $value);
+      if (!empty($filter)) {
+        foreach ($filter as $column => $value) {
+          $stmt->bindValue(":$column", $value);
+        }
       }
 
       if ($limit !== null) {
@@ -117,14 +119,27 @@ class CompanyModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (name, address, phone) VALUES (:name, :address, :phone)";
+    $sql = "INSERT INTO {$this->table} (cnpj, razao_social, nome_fantasia, telefone, email, cep, logradouro, numero, bairro, cidade, uf) VALUES (:cnpj, :razao_social, :nome_fantasia, :telefone, :email, :cep, :logradouro, :numero, :bairro, :cidade, :uf)";
 
     try {
       $stmt = $this->conn->prepare($sql);
-      $stmt->bindParam(':name', $data['name']);
-      $stmt->bindParam(':address', $data['address']);
-      $stmt->bindParam(':phone', $data['phone']);
+      $stmt->bindParam(':cnpj', $data['cnpj']);
+      $stmt->bindParam(':razao_social', $data['razao_social']);
+      $stmt->bindParam(':cnpj', $data['cnpj']);
+      $stmt->bindParam(':nome_fantasia', $data['nome_fantasia']);
+      $stmt->bindParam(':telefone', $data['telefone']);
+      $stmt->bindParam(':email', $data['email']);
+      $stmt->bindParam(':cep', $data['cep']);
+      $stmt->bindParam(':logradouro', $data['logradouro']);
+      $stmt->bindParam(':numero', $data['numero']);
+      $stmt->bindParam(':bairro', $data['bairro']);
+      $stmt->bindParam(':cidade', $data['cidade']);
+      $stmt->bindParam(':uf', $data['uf']);
       $stmt->execute();
+
+      $this->setId($this->conn->lastInsertId());
+      $this->getById();
+      return $this->getCurrentCompany();
     } catch (\PDOException $e) {
       echo $e->getMessage();
     }
@@ -132,27 +147,44 @@ class CompanyModel extends Connection
 
   public function update($data)
   {
-    $sql = "UPDATE {$this->table} SET name = :name, address = :address, phone = :phone WHERE id = :id";
+    $sql = "UPDATE {$this->table} SET cnpj = :cnpj, razao_social = :razao_social, nome_fantasia = :nome_fantasia, telefone = :telefone, email = :email, cep = :cep, logradouro = :logradouro, numero = :numero, bairro = :bairro, cidade = :cidade, uf = :uf, datahora = :datahora WHERE id = :id";
+
+
+    foreach ($data as $column => $value) {
+      $this->$column = $value;
+    }
 
     try {
       $stmt = $this->conn->prepare($sql);
-      $stmt->bindParam(':id', $data['id']);
-      $stmt->bindParam(':name', $data['name']);
-      $stmt->bindParam(':address', $data['address']);
-      $stmt->bindParam(':phone', $data['phone']);
+      $stmt->bindParam(':id', $this->id);
+      $stmt->bindParam(':cnpj', $this->cnpj);
+      $stmt->bindParam(':razao_social', $this->razao_social);
+      $stmt->bindParam(':nome_fantasia', $this->nome_fantasia);
+      $stmt->bindParam(':telefone', $this->telefone);
+      $stmt->bindParam(':email', $this->email);
+      $stmt->bindParam(':cep', $this->cep);
+      $stmt->bindParam(':logradouro', $this->logradouro);
+      $stmt->bindParam(':numero', $this->numero);
+      $stmt->bindParam(':bairro', $this->bairro);
+      $stmt->bindParam(':cidade', $this->cidade);
+      $stmt->bindParam(':uf', $this->uf);
+      $stmt->bindParam(':datahora', $this->datahora);
       $stmt->execute();
+
+      $this->getById();
+      return $this->getCurrentCompany();
     } catch (\PDOException $e) {
       echo $e->getMessage();
     }
   }
 
-  public function delete($id)
+  public function delete()
   {
     $sql = "DELETE FROM {$this->table} WHERE id = :id";
 
     try {
       $stmt = $this->conn->prepare($sql);
-      $stmt->bindParam(':id', $id);
+      $stmt->bindParam(':id', $this->id);
       $stmt->execute();
     } catch (\PDOException $e) {
       echo $e->getMessage();

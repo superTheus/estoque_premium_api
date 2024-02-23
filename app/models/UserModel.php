@@ -83,8 +83,10 @@ class UserModel extends Connection
     try {
       $stmt = $this->conn->prepare($sql);
 
-      foreach ($filters as $column => $value) {
-        $stmt->bindValue(":$column", $value);
+      if (!empty($filters)) {
+        foreach ($filters as $column => $value) {
+          $stmt->bindValue(":$column", $value);
+        }
       }
 
       if ($limit !== null) {
@@ -112,6 +114,10 @@ class UserModel extends Connection
       $stmt->bindParam(':company', $data['company']);
       $stmt->bindParam(':ativo', $data['ativo']);
       $stmt->execute();
+
+      $this->setId($this->conn->lastInsertId());
+      $this->findById();
+      return $this->getCurrentUser();
     } catch (\PDOException $e) {
       echo $e->getMessage();
     }
@@ -131,6 +137,10 @@ class UserModel extends Connection
       $stmt->bindParam(':company', $data['company']);
       $stmt->bindParam(':ativo', $data['ativo']);
       $stmt->execute();
+
+      $this->setId($data['id']);
+      $this->findById();
+      return $this->getCurrentUser();
     } catch (\PDOException $e) {
       echo $e->getMessage();
     }
