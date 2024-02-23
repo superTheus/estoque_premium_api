@@ -22,13 +22,13 @@ class CompanyController
 
     if ($results) {
       http_response_code(200); // OK
-      return json_encode(array(
+      echo json_encode(array(
         "message" => "Results found",
         "results" => $results
       ));
     } else {
       http_response_code(404); // Not Found
-      return ['error' => 'No results found for the given filter'];
+      echo json_encode(['error' => 'No results found for the given filter']);
     }
   }
 

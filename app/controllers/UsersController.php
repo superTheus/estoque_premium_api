@@ -8,9 +8,9 @@ class UsersController
 {
   protected $userModel;
 
-  public function __construct($data = null)
+  public function __construct($id = null)
   {
-    $this->userModel = new UserModel($data ? $data["id"] : null);
+    $this->userModel = new UserModel($id ? $id : null);
   }
 
   public function find($data)
@@ -34,11 +34,33 @@ class UsersController
 
   public function create($data)
   {
-    return $this->userModel->create($data);
+    $result = $this->userModel->create($data);
+
+    if ($result) {
+      http_response_code(200); // OK
+      echo json_encode(array(
+        "message" => "Data created successfully",
+        "results" => $result
+      ));
+    } else {
+      http_response_code(404); // Not Found
+      echo json_encode(['error' => 'Data not created successfully']);
+    }
   }
 
   public function update($data)
   {
-    return $this->userModel->update($data);
+    $result = $this->userModel->update($data);
+
+    if ($result) {
+      http_response_code(200); // OK
+      echo json_encode(array(
+        "message" => "Data updated successfully",
+        "results" => $result
+      ));
+    } else {
+      http_response_code(404); // Not Found
+      echo json_encode(['error' => 'Data not updated successfully']);
+    }
   }
 }

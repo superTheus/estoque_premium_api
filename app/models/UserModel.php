@@ -44,6 +44,7 @@ class UserModel extends Connection
       $this->setPhoto($user['photo']);
       $this->setCompany($user['company']);
       $this->setAtivo($user['ativo']);
+      $this->setPassword($user['password']);
     } catch (\PDOException $e) {
       echo $e->getMessage();
     } catch (\PDOException $e) {
@@ -103,16 +104,16 @@ class UserModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (name, email, password, photo, company, ativo) VALUES (:name, :email, :password, :photo, :company, :ativo)";
+    $sql = "INSERT INTO {$this->table} (name, email, password, photo, company) VALUES (:name, :email, :password, :photo, :company)";
 
     try {
+      $password_hash = md5($data['password']);
       $stmt = $this->conn->prepare($sql);
       $stmt->bindParam(':name', $data['name']);
       $stmt->bindParam(':email', $data['email']);
-      $stmt->bindParam(':password', $data['password']);
+      $stmt->bindParam(':password', $password_hash);
       $stmt->bindParam(':photo', $data['photo']);
       $stmt->bindParam(':company', $data['company']);
-      $stmt->bindParam(':ativo', $data['ativo']);
       $stmt->execute();
 
       $this->setId($this->conn->lastInsertId());
@@ -127,18 +128,25 @@ class UserModel extends Connection
   {
     $sql = "UPDATE {$this->table} SET name = :name, email = :email, password = :password, photo = :photo, company = :company, ativo = :ativo WHERE id = :id";
 
+    foreach ($data as $column => $value) {
+      $this->$column = $value;
+    }
+
     try {
+      if (isset($data['password']) && !empty($data['password'])) {
+        $this->setPassword(md5($data['password']));
+      }
+
       $stmt = $this->conn->prepare($sql);
-      $stmt->bindParam(':id', $data['id']);
-      $stmt->bindParam(':name', $data['name']);
-      $stmt->bindParam(':email', $data['email']);
-      $stmt->bindParam(':password', $data['password']);
-      $stmt->bindParam(':photo', $data['photo']);
-      $stmt->bindParam(':company', $data['company']);
-      $stmt->bindParam(':ativo', $data['ativo']);
+      $stmt->bindParam(':id', $this->id);
+      $stmt->bindParam(':name', $this->name);
+      $stmt->bindParam(':email', $this->email);
+      $stmt->bindParam(':password', $this->password);
+      $stmt->bindParam(':photo', $this->photo);
+      $stmt->bindParam(':company', $this->company);
+      $stmt->bindParam(':ativo', $this->ativo);
       $stmt->execute();
 
-      $this->setId($data['id']);
       $this->findById();
       return $this->getCurrentUser();
     } catch (\PDOException $e) {

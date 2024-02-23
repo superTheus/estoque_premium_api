@@ -40,9 +40,9 @@ class Routers
         $userController->create($data);
       });
 
-      $router->put('/update', function () {
+      $router->put('/update/{id}', function ($id) {
         $data = json_decode(file_get_contents('php://input'), true);
-        $userController = new UsersController($data);
+        $userController = new UsersController($id);
         $userController->update($data);
       });
     });
