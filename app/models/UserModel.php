@@ -86,6 +86,10 @@ class UserModel extends Connection
 
       if (!empty($filters)) {
         foreach ($filters as $column => $value) {
+          if ("$column" === "password") {
+            $value = md5($value);
+          }
+
           $stmt->bindValue(":$column", $value);
         }
       }
