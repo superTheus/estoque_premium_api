@@ -6,6 +6,7 @@ use App\Controllers\BrandsController;
 use App\Controllers\CategoryController;
 use App\Controllers\CompanyController;
 use App\Controllers\SubcategoryController;
+use App\Controllers\SupplierController;
 use App\Controllers\UsersController;
 use Bramus\Router\Router;
 
@@ -127,6 +128,26 @@ class Routers
         $data = json_decode(file_get_contents('php://input'), true);
         $subcategorysController = new SubcategoryController($id);
         $subcategorysController->update($data);
+      });
+    });
+
+    $router->mount('/supplier', function () use ($router) {
+      $router->post('/list', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $supplierController = new SupplierController();
+        $supplierController->find($data);
+      });
+
+      $router->post('/insert', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $supplierController = new SupplierController();
+        $supplierController->create($data);
+      });
+
+      $router->put('/update/{id}', function ($id) {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $supplierController = new SupplierController($id);
+        $supplierController->update($data);
       });
     });
 
