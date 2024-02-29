@@ -10,6 +10,7 @@ class SubcategorysModel extends Connection
   private $conn;
   private $id;
   private $id_category;
+  private $id_company;
   private $description;
   private $deleted;
   private $table = 'subcategorys';
@@ -37,6 +38,7 @@ class SubcategorysModel extends Connection
 
       $this->setDescription($category['description']);
       $this->setId_category($category['id_category']);
+      $this->setId_company($category['id_company']);
       $this->setDeleted($category['deleted']);
     } catch (\PDOException $e) {
       echo $e->getMessage();
@@ -49,6 +51,7 @@ class SubcategorysModel extends Connection
     $data->id = $this->getId();
     $data->description = $this->getDescription();
     $data->id_category = $this->getId_category();
+    $data->id_company = $this->getId_company();
     $data->deleted = $this->getDeleted();
     return $data;
   }
@@ -91,12 +94,13 @@ class SubcategorysModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (id_category, description) VALUES (:id_category, :description)";
+    $sql = "INSERT INTO {$this->table} (id_category, description, id_company) VALUES (:id_category, :description, :id_company)";
 
     try {
       $stmt = $this->conn->prepare($sql);
       $stmt->bindParam(':id_category', $data['id_category']);
       $stmt->bindParam(':description', $data['description']);
+      $stmt->bindParam(':id_company', $data['id_company']);
       $stmt->execute();
 
       $this->setId($this->conn->lastInsertId());
@@ -220,6 +224,26 @@ class SubcategorysModel extends Connection
   public function setId_category($id_category)
   {
     $this->id_category = $id_category;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of id_company
+   */
+  public function getId_company()
+  {
+    return $this->id_company;
+  }
+
+  /**
+   * Set the value of id_company
+   *
+   * @return  self
+   */
+  public function setId_company($id_company)
+  {
+    $this->id_company = $id_company;
 
     return $this;
   }

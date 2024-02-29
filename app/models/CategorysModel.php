@@ -9,6 +9,7 @@ class CategorysModel extends Connection
 {
   private $conn;
   private $id;
+  private $id_company;
   private $description;
   private $deleted;
   private $table = 'categorys';
@@ -35,6 +36,7 @@ class CategorysModel extends Connection
       $category = $stmt->fetch(\PDO::FETCH_ASSOC);
 
       $this->setDescription($category['description']);
+      $this->setId_company($category['id_company']);
       $this->setDeleted($category['deleted']);
     } catch (\PDOException $e) {
       echo $e->getMessage();
@@ -46,6 +48,7 @@ class CategorysModel extends Connection
     $data = new stdClass();
     $data->id = $this->getId();
     $data->description = $this->getDescription();
+    $data->id_company = $this->getId_company();
     $data->deleted = $this->getDeleted();
     return $data;
   }
@@ -88,11 +91,12 @@ class CategorysModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (description) VALUES (:description)";
+    $sql = "INSERT INTO {$this->table} (description, id_company) VALUES (:description, :id_company)";
 
     try {
       $stmt = $this->conn->prepare($sql);
       $stmt->bindParam(':description', $data['description']);
+      $stmt->bindParam(':id_company', $data['id_company']);
       $stmt->execute();
 
       $this->setId($this->conn->lastInsertId());
@@ -195,6 +199,26 @@ class CategorysModel extends Connection
   public function setId($id)
   {
     $this->id = $id;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of id_company
+   */
+  public function getId_company()
+  {
+    return $this->id_company;
+  }
+
+  /**
+   * Set the value of id_company
+   *
+   * @return  self
+   */
+  public function setId_company($id_company)
+  {
+    $this->id_company = $id_company;
 
     return $this;
   }

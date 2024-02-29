@@ -26,7 +26,7 @@ class ClientsModel extends Connection
   private $icms;
   private $genero;
   private $deleted;
-  private $table = 'brands';
+  private $table = 'clients';
 
   public function __construct($id = null)
   {
@@ -71,7 +71,7 @@ class ClientsModel extends Connection
     }
   }
 
-  public function getCurrentBrand()
+  public function getCurrentClient()
   {
     $data = new stdClass();
     $data->id = $this->getId();
@@ -133,16 +133,32 @@ class ClientsModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (description) VALUES (:description)";
+    $sql = "INSERT INTO {$this->table} (nome, apelido, razao_social, rg_inscricao, email, celular, cep, endereco, documento, cidade, numero, bairro, complemento, data_nascimento, icms, genero) 
+            VALUES (:nome, :apelido, :razao_social, :rg_inscricao, :email, :celular, :cep, :endereco, :documento, :cidade, :numero, :bairro, :complemento, :data_nascimento, :icms, :genero)";
 
     try {
       $stmt = $this->conn->prepare($sql);
-      $stmt->bindParam(':description', $data['description']);
+      $stmt->bindValue(':nome', isset($data['nome']) ? $data['nome'] : null);
+      $stmt->bindValue(':apelido', isset($data['apelido']) ? $data['apelido'] : null);
+      $stmt->bindValue(':razao_social', isset($data['razao_social']) ? $data['razao_social'] : null);
+      $stmt->bindValue(':rg_inscricao', isset($data['rg_inscricao']) ? $data['rg_inscricao'] : null);
+      $stmt->bindValue(':email', isset($data['email']) ? $data['email'] : null);
+      $stmt->bindValue(':celular', isset($data['celular']) ? $data['celular'] : null);
+      $stmt->bindValue(':cep', isset($data['cep']) ? $data['cep'] : null);
+      $stmt->bindValue(':endereco', isset($data['endereco']) ? $data['endereco'] : null);
+      $stmt->bindValue(':documento', isset($data['documento']) ? $data['documento'] : null);
+      $stmt->bindValue(':cidade', isset($data['cidade']) ? $data['cidade'] : null);
+      $stmt->bindValue(':numero', isset($data['numero']) ? $data['numero'] : null);
+      $stmt->bindValue(':bairro', isset($data['bairro']) ? $data['bairro'] : null);
+      $stmt->bindValue(':complemento', isset($data['complemento']) ? $data['complemento'] : null);
+      $stmt->bindValue(':data_nascimento', isset($data['data_nascimento']) ? $data['data_nascimento'] : null);
+      $stmt->bindValue(':icms', isset($data['icms']) ? $data['icms'] : null);
+      $stmt->bindValue(':genero', isset($data['genero']) ? $data['genero'] : null);
       $stmt->execute();
 
       $this->setId($this->conn->lastInsertId());
       $this->getById();
-      return $this->getCurrentBrand();
+      return $this->getCurrentClient();
     } catch (\PDOException $e) {
       echo $e->getMessage();
     }
@@ -150,7 +166,25 @@ class ClientsModel extends Connection
 
   public function update($data)
   {
-    $sql = "UPDATE {$this->table} SET description = :description, deleted = :deleted WHERE id = :id";
+    $sql = "UPDATE {$this->table} SET 
+      nome = :nome, 
+      apelido = :apelido, 
+      razao_social = :razao_social, 
+      rg_inscricao = :rg_inscricao, 
+      email = :email, 
+      celular = :celular, 
+      cep = :cep, 
+      endereco = :endereco, 
+      documento = :documento, 
+      cidade = :cidade, 
+      numero = :numero, 
+      bairro = :bairro, 
+      complemento = :complemento, 
+      data_nascimento = :data_nascimento, 
+      icms = :icms, 
+      genero = :genero, 
+      deleted = :deleted 
+    WHERE id = :id";
 
 
     foreach ($data as $column => $value) {
@@ -159,13 +193,28 @@ class ClientsModel extends Connection
 
     try {
       $stmt = $this->conn->prepare($sql);
-      $stmt->bindParam(':description', $this->description);
-      $stmt->bindParam(':deleted', $this->deleted);
-      $stmt->bindParam(':id', $this->id);
+      $stmt->bindValue(':nome', $this->nome);
+      $stmt->bindValue(':apelido', $this->apelido);
+      $stmt->bindValue(':razao_social', $this->razao_social);
+      $stmt->bindValue(':rg_inscricao', $this->rg_inscricao);
+      $stmt->bindValue(':email', $this->email);
+      $stmt->bindValue(':celular', $this->celular);
+      $stmt->bindValue(':cep', $this->cep);
+      $stmt->bindValue(':endereco', $this->endereco);
+      $stmt->bindValue(':documento', $this->documento);
+      $stmt->bindValue(':cidade', $this->cidade);
+      $stmt->bindValue(':numero', $this->numero);
+      $stmt->bindValue(':bairro', $this->bairro);
+      $stmt->bindValue(':complemento', $this->complemento);
+      $stmt->bindValue(':data_nascimento', $this->data_nascimento);
+      $stmt->bindValue(':icms', $this->icms);
+      $stmt->bindValue(':genero', $this->genero);
+      $stmt->bindValue(':deleted', $this->deleted);
+      $stmt->bindValue(':id', $this->id);
       $stmt->execute();
 
       $this->getById();
-      return $this->getCurrentBrand();
+      return $this->getCurrentClient();
     } catch (\PDOException $e) {
       echo $e->getMessage();
     }

@@ -4,6 +4,7 @@ namespace App\Routers;
 
 use App\Controllers\BrandsController;
 use App\Controllers\CategoryController;
+use App\Controllers\ClientsController;
 use App\Controllers\CompanyController;
 use App\Controllers\SubcategoryController;
 use App\Controllers\SupplierController;
@@ -148,6 +149,26 @@ class Routers
         $data = json_decode(file_get_contents('php://input'), true);
         $supplierController = new SupplierController($id);
         $supplierController->update($data);
+      });
+    });
+
+    $router->mount('/clients', function () use ($router) {
+      $router->post('/list', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $clientController = new ClientsController();
+        $clientController->find($data);
+      });
+
+      $router->post('/insert', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $clientController = new ClientsController();
+        $clientController->create($data);
+      });
+
+      $router->put('/update/{id}', function ($id) {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $clientController = new ClientsController($id);
+        $clientController->update($data);
       });
     });
 
