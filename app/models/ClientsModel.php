@@ -133,8 +133,8 @@ class ClientsModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (nome, apelido, razao_social, rg_inscricao, email, celular, cep, endereco, documento, cidade, numero, bairro, complemento, data_nascimento, icms, genero) 
-            VALUES (:nome, :apelido, :razao_social, :rg_inscricao, :email, :celular, :cep, :endereco, :documento, :cidade, :numero, :bairro, :complemento, :data_nascimento, :icms, :genero)";
+    $sql = "INSERT INTO {$this->table} (nome, apelido, razao_social, rg_inscricao, email, celular, cep, endereco, documento, cidade, numero, bairro, complemento, data_nascimento, icms, genero, id_company) 
+            VALUES (:nome, :apelido, :razao_social, :rg_inscricao, :email, :celular, :cep, :endereco, :documento, :cidade, :numero, :bairro, :complemento, :data_nascimento, :icms, :genero, :id_company)";
 
     try {
       $stmt = $this->conn->prepare($sql);
@@ -154,6 +154,7 @@ class ClientsModel extends Connection
       $stmt->bindValue(':data_nascimento', isset($data['data_nascimento']) ? $data['data_nascimento'] : null);
       $stmt->bindValue(':icms', isset($data['icms']) ? $data['icms'] : null);
       $stmt->bindValue(':genero', isset($data['genero']) ? $data['genero'] : null);
+      $stmt->bindValue(':id_company', isset($data['id_company']) ? $data['id_company'] : null);
       $stmt->execute();
 
       $this->setId($this->conn->lastInsertId());

@@ -6,6 +6,7 @@ use App\Controllers\BrandsController;
 use App\Controllers\CategoryController;
 use App\Controllers\ClientsController;
 use App\Controllers\CompanyController;
+use App\Controllers\ProductsController;
 use App\Controllers\SubcategoryController;
 use App\Controllers\SupplierController;
 use App\Controllers\UsersController;
@@ -169,6 +170,26 @@ class Routers
         $data = json_decode(file_get_contents('php://input'), true);
         $clientController = new ClientsController($id);
         $clientController->update($data);
+      });
+    });
+
+    $router->mount('/products', function () use ($router) {
+      $router->post('/list', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $productsController = new ProductsController();
+        $productsController->find($data);
+      });
+
+      $router->post('/insert', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $productsController = new ProductsController();
+        $productsController->create($data);
+      });
+
+      $router->put('/update/{id}', function ($id) {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $productsController = new ProductsController($id);
+        $productsController->update($data);
       });
     });
 
