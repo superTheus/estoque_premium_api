@@ -6,6 +6,8 @@ use App\Controllers\BrandsController;
 use App\Controllers\CategoryController;
 use App\Controllers\ClientsController;
 use App\Controllers\CompanyController;
+use App\Controllers\ContasController;
+use App\Controllers\ContasPagarReceberController;
 use App\Controllers\ProductsController;
 use App\Controllers\SubcategoryController;
 use App\Controllers\SupplierController;
@@ -190,6 +192,46 @@ class Routers
         $data = json_decode(file_get_contents('php://input'), true);
         $productsController = new ProductsController($id);
         $productsController->update($data);
+      });
+    });
+
+    $router->mount('/contas', function () use ($router) {
+      $router->post('/list', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $contasController = new ContasController();
+        $contasController->find($data);
+      });
+
+      $router->post('/insert', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $contasController = new ContasController();
+        $contasController->create($data);
+      });
+
+      $router->put('/update/{id}', function ($id) {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $contasController = new ContasController($id);
+        $contasController->update($data);
+      });
+    });
+
+    $router->mount('/pagamentos', function () use ($router) {
+      $router->post('/list', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $contasController = new ContasPagarReceberController();
+        $contasController->find($data);
+      });
+
+      $router->post('/insert', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $contasController = new ContasPagarReceberController();
+        $contasController->create($data);
+      });
+
+      $router->put('/update/{id}', function ($id) {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $contasController = new ContasPagarReceberController($id);
+        $contasController->update($data);
       });
     });
 

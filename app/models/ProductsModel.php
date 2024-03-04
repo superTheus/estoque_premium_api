@@ -157,7 +157,8 @@ class ProductsModel extends Connection
               ncm = :ncm, 
               id_fornecedor = :id_fornecedor, 
               control_stock = :control_stock, 
-              stock = :stock 
+              stock = :stock,
+              deleted = :deleted
             WHERE id = :id";
 
 
@@ -177,6 +178,7 @@ class ProductsModel extends Connection
       $stmt->bindValue(':id_fornecedor', $this->id_fornecedor);
       $stmt->bindValue(':control_stock', $this->control_stock);
       $stmt->bindValue(':stock', $this->stock);
+      $stmt->bindValue(':deleted', $this->deleted);
       $stmt->bindParam(':id', $this->id);
       $stmt->execute();
 

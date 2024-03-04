@@ -96,7 +96,7 @@ class BrandsModel extends Connection
     try {
       $stmt = $this->conn->prepare($sql);
       $stmt->bindParam(':description', $data['description']);
-      $stmt->bindParam(':id_company', $data[':id_company']);
+      $stmt->bindParam(':id_company', $data['id_company']);
       $stmt->execute();
 
       $this->setId($this->conn->lastInsertId());
