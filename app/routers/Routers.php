@@ -3,6 +3,7 @@
 namespace App\Routers;
 
 use App\Controllers\BrandsController;
+use App\Controllers\CaixasController;
 use App\Controllers\CategoryController;
 use App\Controllers\ClientsController;
 use App\Controllers\CompanyController;
@@ -215,7 +216,7 @@ class Routers
       });
     });
 
-    $router->mount('/pagamentos', function () use ($router) {
+    $router->mount('/finance', function () use ($router) {
       $router->post('/list', function () {
         $data = json_decode(file_get_contents('php://input'), true);
         $contasController = new ContasPagarReceberController();
@@ -232,6 +233,26 @@ class Routers
         $data = json_decode(file_get_contents('php://input'), true);
         $contasController = new ContasPagarReceberController($id);
         $contasController->update($data);
+      });
+    });
+
+    $router->mount('/caixas', function () use ($router) {
+      $router->post('/list', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $caixasController = new CaixasController();
+        $caixasController->find($data);
+      });
+
+      $router->post('/insert', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $caixasController = new CaixasController();
+        $caixasController->create($data);
+      });
+
+      $router->put('/update/{id}', function ($id) {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $caixasController = new CaixasController($id);
+        $caixasController->update($data);
       });
     });
 
