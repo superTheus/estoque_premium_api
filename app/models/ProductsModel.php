@@ -80,15 +80,23 @@ class ProductsModel extends Connection
     return $data;
   }
 
-  public function find($filter = [], $limit = null)
+  public function find($filter = [], $limit = null, $search = null)
   {
     $sql = "SELECT * FROM {$this->table}";
 
+    $whereClauses = [];
     if (!empty($filter)) {
-      $sql .= " WHERE ";
-      $sql .= implode(" AND ", array_map(function ($column) {
+      $whereClauses[] = implode(" AND ", array_map(function ($column) {
         return "$column = :$column";
       }, array_keys($filter)));
+    }
+
+    if ($search !== null) {
+      $whereClauses[] = "description LIKE :search";
+    }
+
+    if (!empty($whereClauses)) {
+      $sql .= " WHERE " . implode(" AND ", $whereClauses);
     }
 
     if ($limit !== null) {
@@ -102,6 +110,10 @@ class ProductsModel extends Connection
         foreach ($filter as $column => $value) {
           $stmt->bindValue(":$column", $value);
         }
+      }
+
+      if ($search !== null) {
+        $stmt->bindValue(':search', '%' . $search . '%');
       }
 
       if ($limit !== null) {

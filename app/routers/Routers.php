@@ -10,6 +10,8 @@ use App\Controllers\CompanyController;
 use App\Controllers\ContasController;
 use App\Controllers\ContasPagarReceberController;
 use App\Controllers\ProductsController;
+use App\Controllers\SalesController;
+use App\Controllers\SalesProductsController;
 use App\Controllers\SubcategoryController;
 use App\Controllers\SupplierController;
 use App\Controllers\UsersController;
@@ -253,6 +255,52 @@ class Routers
         $data = json_decode(file_get_contents('php://input'), true);
         $caixasController = new CaixasController($id);
         $caixasController->update($data);
+      });
+    });
+
+    $router->mount('/sales', function () use ($router) {
+      $router->post('/list', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $salesController = new SalesController();
+        $salesController->find($data);
+      });
+
+      $router->post('/insert', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $salesController = new SalesController();
+        $salesController->create($data);
+      });
+
+      $router->put('/update/{id}', function ($id) {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $salesController = new SalesController($id);
+        $salesController->update($data);
+      });
+
+      $router->mount('/products', function () use ($router) {
+        $router->post('/list', function () {
+          $data = json_decode(file_get_contents('php://input'), true);
+          $salesController = new SalesProductsController();
+          $salesController->find($data);
+        });
+
+        $router->post('/insert', function () {
+          $data = json_decode(file_get_contents('php://input'), true);
+          $salesController = new SalesProductsController();
+          $salesController->create($data);
+        });
+
+        $router->put('/update/{id}', function ($id) {
+          $data = json_decode(file_get_contents('php://input'), true);
+          $salesController = new SalesProductsController($id);
+          $salesController->update($data);
+        });
+
+        $router->delete('/delete/{id}', function ($id) {
+          json_decode(file_get_contents('php://input'), true);
+          $salesController = new SalesProductsController($id);
+          $salesController->delete();
+        });
       });
     });
 

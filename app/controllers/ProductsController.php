@@ -22,7 +22,8 @@ class ProductsController
     $productsModel = new ProductsModel();
     $filter = $data && isset($data['filter']) ? $data['filter'] : null;
     $limit = $data && isset($data['limit']) ? $data['limit'] : null;
-    $results = $productsModel->find($filter, $limit);
+    $search = $data && isset($data['search']) ? $data['search'] : null;
+    $results = $productsModel->find($filter, $limit, $search);
 
     foreach ($results as $key => $value) {
       $brand = new BrandsModel($value['id_brand']);
