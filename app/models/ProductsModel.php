@@ -61,7 +61,7 @@ class ProductsModel extends Connection
     }
   }
 
-  public function getCurrentBrand()
+  public function getCurrentProduct()
   {
     $data = new stdClass();
     $data->id = $this->getId();
@@ -151,7 +151,7 @@ class ProductsModel extends Connection
 
       $this->setId($this->conn->lastInsertId());
       $this->getById();
-      return $this->getCurrentBrand();
+      return $this->getCurrentProduct();
     } catch (\PDOException $e) {
       echo $e->getMessage();
     }
@@ -195,7 +195,7 @@ class ProductsModel extends Connection
       $stmt->execute();
 
       $this->getById();
-      return $this->getCurrentBrand();
+      return $this->getCurrentProduct();
     } catch (\PDOException $e) {
       echo $e->getMessage();
     }

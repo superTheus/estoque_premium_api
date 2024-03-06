@@ -92,7 +92,7 @@ class SalesProductsModel extends Connection
 
       $stmt->execute();
 
-      return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+      return $stmt->fetchAll(\PDO::FETCH_OBJ);
     } catch (\PDOException $e) {
       echo $e->getMessage();
     }
@@ -153,7 +153,7 @@ class SalesProductsModel extends Connection
 
     try {
       $stmt = $this->conn->prepare($sql);
-      $stmt->bindParam(':id', $this->getId_product());
+      $stmt->bindValue(':id', $this->getId_product());
       $stmt->execute();
 
       return $this->getCurrentSale();

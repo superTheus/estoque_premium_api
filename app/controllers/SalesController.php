@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\ProductsModel;
 use App\Models\SalesModel;
 use App\Models\SalesProductsModel;
 
@@ -27,6 +28,11 @@ class SalesController
         $results[$key]->products = $salesProducts->find([
           "id_sale" => $result->id
         ]);
+
+        foreach ($results[$key]->products as $k => $product) {
+          $productModel = new ProductsModel($product->id_product);
+          $results[$key]->products[$k]->product = $productModel->getCurrentProduct();
+        }
       }
     }
 
