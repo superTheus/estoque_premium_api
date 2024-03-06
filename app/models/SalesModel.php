@@ -13,6 +13,8 @@ class SalesModel extends Connection
   private $id_user;
   private $total;
   private $deleted;
+  private $status;
+  private $date_hour;
   private $table = 'sales';
 
   public function __construct($id = null)
@@ -53,6 +55,8 @@ class SalesModel extends Connection
     $data->id_company = $this->getId_company();
     $data->id_user = $this->getId_user();
     $data->total = $this->getTotal();
+    $data->status = $this->getStatus();
+    $data->date_hour = $this->getDate_hour();
     $data->deleted = $this->getDeleted();
     return $data;
   }
@@ -114,7 +118,7 @@ class SalesModel extends Connection
 
   public function update($data)
   {
-    $sql = "UPDATE {$this->table} SET total = :total, deleted = :deleted WHERE id = :id";
+    $sql = "UPDATE {$this->table} SET total = :total, status = :status, deleted = :deleted WHERE id = :id";
 
 
     foreach ($data as $column => $value) {
@@ -124,6 +128,7 @@ class SalesModel extends Connection
     try {
       $stmt = $this->conn->prepare($sql);
       $stmt->bindParam(':total', $this->total);
+      $stmt->bindParam(':status', $this->status);
       $stmt->bindParam(':deleted', $this->deleted);
       $stmt->bindParam(':id', $this->id);
       $stmt->execute();
@@ -244,6 +249,46 @@ class SalesModel extends Connection
   public function setDeleted($deleted)
   {
     $this->deleted = $deleted;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of status
+   */
+  public function getStatus()
+  {
+    return $this->status;
+  }
+
+  /**
+   * Set the value of status
+   *
+   * @return  self
+   */
+  public function setStatus($status)
+  {
+    $this->status = $status;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of date_hour
+   */
+  public function getDate_hour()
+  {
+    return $this->date_hour;
+  }
+
+  /**
+   * Set the value of date_hour
+   *
+   * @return  self
+   */
+  public function setDate_hour($date_hour)
+  {
+    $this->date_hour = $date_hour;
 
     return $this;
   }

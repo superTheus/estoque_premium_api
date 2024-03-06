@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\ProductsModel;
 use App\Models\SalesModel;
 use App\Models\SalesProductsModel;
+use App\Models\UserModel;
 
 class SalesController
 {
@@ -24,6 +25,10 @@ class SalesController
 
     if ($results) {
       foreach ($results as $key => $result) {
+
+        $userModel = new UserModel($result->id_user);
+        $results[$key]->user = $userModel->getCurrentUser();
+
         $salesProducts = new SalesProductsModel();
         $results[$key]->products = $salesProducts->find([
           "id_sale" => $result->id
