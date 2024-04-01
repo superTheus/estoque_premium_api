@@ -11,6 +11,7 @@ class SalesModel extends Connection
   private $id;
   private $id_company;
   private $id_user;
+  private $id_client;
   private $total;
   private $deleted;
   private $status;
@@ -41,6 +42,7 @@ class SalesModel extends Connection
 
       $this->setId_company($sale['id_company']);
       $this->setId_user($sale['id_user']);
+      $this->setId_client($sale['id_client']);
       $this->setTotal($sale['total']);
       $this->setDeleted($sale['deleted']);
     } catch (\PDOException $e) {
@@ -54,6 +56,7 @@ class SalesModel extends Connection
     $data->id = $this->getId();
     $data->id_company = $this->getId_company();
     $data->id_user = $this->getId_user();
+    $data->id_client = $this->getId_client();
     $data->total = $this->getTotal();
     $data->status = $this->getStatus();
     $data->date_hour = $this->getDate_hour();
@@ -118,7 +121,7 @@ class SalesModel extends Connection
 
   public function update($data)
   {
-    $sql = "UPDATE {$this->table} SET total = :total, status = :status, deleted = :deleted WHERE id = :id";
+    $sql = "UPDATE {$this->table} SET total = :total, status = :status, id_client = :id_client, deleted = :deleted WHERE id = :id";
 
 
     foreach ($data as $column => $value) {
@@ -129,6 +132,7 @@ class SalesModel extends Connection
       $stmt = $this->conn->prepare($sql);
       $stmt->bindParam(':total', $this->total);
       $stmt->bindParam(':status', $this->status);
+      $stmt->bindParam(':id_client', $this->id_client);
       $stmt->bindParam(':deleted', $this->deleted);
       $stmt->bindParam(':id', $this->id);
       $stmt->execute();
@@ -289,6 +293,26 @@ class SalesModel extends Connection
   public function setDate_hour($date_hour)
   {
     $this->date_hour = $date_hour;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of id_client
+   */
+  public function getId_client()
+  {
+    return $this->id_client;
+  }
+
+  /**
+   * Set the value of id_client
+   *
+   * @return  self
+   */
+  public function setId_client($id_client)
+  {
+    $this->id_client = $id_client;
 
     return $this;
   }

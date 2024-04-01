@@ -2,6 +2,7 @@
 
 namespace App\Routers;
 
+use App\Controllers\BalanceController;
 use App\Controllers\BrandsController;
 use App\Controllers\CaixasController;
 use App\Controllers\CategoryController;
@@ -301,6 +302,20 @@ class Routers
           $salesController = new SalesProductsController($id);
           $salesController->delete();
         });
+      });
+    });
+
+    $router->mount('/balance', function () use ($router) {
+      $router->post('/list', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $balanceController = new BalanceController();
+        $balanceController->find($data);
+      });
+
+      $router->post('/insert', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $balanceController = new BalanceController();
+        $balanceController->create($data);
       });
     });
 

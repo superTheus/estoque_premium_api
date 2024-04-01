@@ -29,6 +29,9 @@ class SalesController
         $userModel = new UserModel($result->id_user);
         $results[$key]->user = $userModel->getCurrentUser();
 
+        $clientModel = new UserModel($result->id_client);
+        $results[$key]->client = $clientModel->getCurrentUser();
+
         $salesProducts = new SalesProductsModel();
         $results[$key]->products = $salesProducts->find([
           "id_sale" => $result->id
