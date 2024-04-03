@@ -66,10 +66,19 @@ class SalesModel extends Connection
 
   public function find($filter = [], $limit = null)
   {
-    $sql = "SELECT * FROM {$this->table}";
+    $sql = "SELECT * FROM {$this->table} WHERE 1 = 1 ";
+
+    if (isset($filter['date_init']) && isset($filter['date_end'])) {
+      $dateInit = $filter['date_init'];
+      $dateEnd = $filter['date_end'];
+      $sql .= " AND DATE(date_hour) BETWEEN DATE('$dateInit') AND DATE('$dateEnd')";
+
+      unset($filter['date_init']);
+      unset($filter['date_end']);
+    }
 
     if (!empty($filter)) {
-      $sql .= " WHERE ";
+      $sql .= " AND ";
       $sql .= implode(" AND ", array_map(function ($column) {
         return "$column = :$column";
       }, array_keys($filter)));
