@@ -13,6 +13,8 @@ class UserModel extends Connection
   private $email;
   private $password;
   private $photo;
+  private $profile;
+  private $use_system;
   private $company;
   private $ativo;
   private $table = 'users';
@@ -108,7 +110,7 @@ class UserModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (name, email, password, photo, company) VALUES (:name, :email, :password, :photo, :company)";
+    $sql = "INSERT INTO {$this->table} (name, email, password, photo, company, profile, use_system) VALUES (:name, :email, :password, :photo, :company, :profile, :use_system)";
 
     try {
       $password_hash = md5($data['password']);
@@ -118,6 +120,8 @@ class UserModel extends Connection
       $stmt->bindParam(':password', $password_hash);
       $stmt->bindParam(':photo', $data['photo']);
       $stmt->bindParam(':company', $data['company']);
+      $stmt->bindParam(':profile', $data['profile']);
+      $stmt->bindParam(':use_system', $data['use_system']);
       $stmt->execute();
 
       $this->setId($this->conn->lastInsertId());
@@ -130,7 +134,7 @@ class UserModel extends Connection
 
   public function update($data)
   {
-    $sql = "UPDATE {$this->table} SET name = :name, email = :email, password = :password, photo = :photo, company = :company, ativo = :ativo WHERE id = :id";
+    $sql = "UPDATE {$this->table} SET name = :name, email = :email, password = :password, photo = :photo, company = :company, ativo = :ativo, profile = :profile, use_system = :use_system WHERE id = :id";
 
     foreach ($data as $column => $value) {
       $this->$column = $value;
@@ -148,6 +152,8 @@ class UserModel extends Connection
       $stmt->bindParam(':password', $this->password);
       $stmt->bindParam(':photo', $this->photo);
       $stmt->bindParam(':company', $this->company);
+      $stmt->bindParam(':profile', $this->profile);
+      $stmt->bindParam(':use_system', $this->use_system);
       $stmt->bindParam(':ativo', $this->ativo);
       $stmt->execute();
 
@@ -307,6 +313,46 @@ class UserModel extends Connection
   public function setId($id)
   {
     $this->id = $id;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of profile
+   */
+  public function getProfile()
+  {
+    return $this->profile;
+  }
+
+  /**
+   * Set the value of profile
+   *
+   * @return  self
+   */
+  public function setProfile($profile)
+  {
+    $this->profile = $profile;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of use_system
+   */
+  public function getUse_system()
+  {
+    return $this->use_system;
+  }
+
+  /**
+   * Set the value of use_system
+   *
+   * @return  self
+   */
+  public function setUse_system($use_system)
+  {
+    $this->use_system = $use_system;
 
     return $this;
   }
