@@ -21,6 +21,10 @@ class CompanyModel extends Connection
   private $cidade;
   private $uf;
   private $datahora;
+  private $certificate;
+  private $password;
+  private $csc;
+  private $csc_id;
   private $table = 'company';
 
   public function __construct($id = null)
@@ -56,6 +60,10 @@ class CompanyModel extends Connection
       $this->setCidade($company['cidade']);
       $this->setUf($company['uf']);
       $this->setDatahora($company['datahora']);
+      $this->setCertificate($company['certificate']);
+      $this->setPassword($company['password']);
+      $this->setCsc($company['csc']);
+      $this->setCsc_id($company['csc_id']);
     } catch (\PDOException $e) {
       echo $e->getMessage();
     }
@@ -77,7 +85,10 @@ class CompanyModel extends Connection
     $data->cidade = $this->getCidade();
     $data->uf = $this->getUf();
     $data->datahora = $this->getDatahora();
-
+    $data->certificate = $this->getCertificate();
+    $data->password = $this->getPassword();
+    $data->csc = $this->getCsc();
+    $data->csc_id = $this->getCsc_id();
     return $data;
   }
 
@@ -147,7 +158,10 @@ class CompanyModel extends Connection
 
   public function update($data)
   {
-    $sql = "UPDATE {$this->table} SET cnpj = :cnpj, razao_social = :razao_social, nome_fantasia = :nome_fantasia, telefone = :telefone, email = :email, cep = :cep, logradouro = :logradouro, numero = :numero, bairro = :bairro, cidade = :cidade, uf = :uf, datahora = :datahora WHERE id = :id";
+    $sql = "UPDATE {$this->table} 
+            SET cnpj = :cnpj, razao_social = :razao_social, nome_fantasia = :nome_fantasia, telefone = :telefone, email = :email, cep = :cep, logradouro = :logradouro, numero = :numero, bairro = :bairro, 
+                        cidade = :cidade, uf = :uf, datahora = :datahora, certificate = :certificate, password = :password, csc = :csc, csc_id = :csc_id
+            WHERE id = :id";
 
 
     foreach ($data as $column => $value) {
@@ -169,6 +183,10 @@ class CompanyModel extends Connection
       $stmt->bindParam(':cidade', $this->cidade);
       $stmt->bindParam(':uf', $this->uf);
       $stmt->bindParam(':datahora', $this->datahora);
+      $stmt->bindParam(':certificate', $this->certificate);
+      $stmt->bindParam(':password', $this->password);
+      $stmt->bindParam(':csc', $this->csc);
+      $stmt->bindParam(':csc_id', $this->csc_id);
       $stmt->execute();
 
       $this->getById();
@@ -447,6 +465,86 @@ class CompanyModel extends Connection
   public function setDatahora($datahora)
   {
     $this->datahora = $datahora;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of certificate
+   */
+  public function getCertificate()
+  {
+    return $this->certificate;
+  }
+
+  /**
+   * Set the value of certificate
+   *
+   * @return  self
+   */
+  public function setCertificate($certificate)
+  {
+    $this->certificate = $certificate;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of password
+   */
+  public function getPassword()
+  {
+    return $this->password;
+  }
+
+  /**
+   * Set the value of password
+   *
+   * @return  self
+   */
+  public function setPassword($password)
+  {
+    $this->password = $password;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of csc
+   */
+  public function getCsc()
+  {
+    return $this->csc;
+  }
+
+  /**
+   * Set the value of csc
+   *
+   * @return  self
+   */
+  public function setCsc($csc)
+  {
+    $this->csc = $csc;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of csc_id
+   */
+  public function getCsc_id()
+  {
+    return $this->csc_id;
+  }
+
+  /**
+   * Set the value of csc_id
+   *
+   * @return  self
+   */
+  public function setCsc_id($csc_id)
+  {
+    $this->csc_id = $csc_id;
 
     return $this;
   }
