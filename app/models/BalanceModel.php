@@ -14,6 +14,7 @@ class BalanceModel extends Connection
   private $balance_preview;
   private $balance_new;
   private $date_hour;
+  private $type;
   private $table = 'products_mov';
 
   public function __construct($id = null)
@@ -42,6 +43,7 @@ class BalanceModel extends Connection
       $this->setBalance_preview($balance['balance_preview']);
       $this->setBalance_new($balance['balance_new']);
       $this->setDate_hour($balance['date_hour']);
+      $this->setType($balance['type']);
     } catch (\PDOException $e) {
       echo $e->getMessage();
     }
@@ -56,6 +58,7 @@ class BalanceModel extends Connection
     $data->balance_preview = $this->getBalance_preview();
     $data->balance_new = $this->getBalance_new();
     $data->date_hour = $this->getDate_hour();
+    $data->type = $this->getType();
     return $data;
   }
 
@@ -97,7 +100,7 @@ class BalanceModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (id_product, id_company, balance_preview, balance_new) VALUES (:id_product, :id_company, :balance_preview, :balance_new)";
+    $sql = "INSERT INTO {$this->table} (id_product, id_company, balance_preview, balance_new, type) VALUES (:id_product, :id_company, :balance_preview, :balance_new, :type)";
 
     try {
       $stmt = $this->conn->prepare($sql);
@@ -105,6 +108,7 @@ class BalanceModel extends Connection
       $stmt->bindParam(':id_company', $data['id_company']);
       $stmt->bindParam(':balance_preview', $data['balance_preview']);
       $stmt->bindParam(':balance_new', $data['balance_new']);
+      $stmt->bindParam(':type', $data['type']);
       $stmt->execute();
 
       return $this->conn->lastInsertId();
@@ -229,6 +233,26 @@ class BalanceModel extends Connection
   public function setId_company($id_company)
   {
     $this->id_company = $id_company;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of type
+   */
+  public function getType()
+  {
+    return $this->type;
+  }
+
+  /**
+   * Set the value of type
+   *
+   * @return  self
+   */
+  public function setType($type)
+  {
+    $this->type = $type;
 
     return $this;
   }

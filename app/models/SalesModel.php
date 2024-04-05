@@ -111,12 +111,11 @@ class SalesModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (id_company, id_user, total) VALUES (:id_company, :id_user, :total)";
+    $sql = "INSERT INTO {$this->table} (id_company, total) VALUES (:id_company, :total)";
 
     try {
       $stmt = $this->conn->prepare($sql);
       $stmt->bindValue(':id_company', $data['id_company']);
-      $stmt->bindValue(':id_user', $data['id_user']);
       $stmt->bindValue(':total', $data['total']);
       $stmt->execute();
 
@@ -130,7 +129,7 @@ class SalesModel extends Connection
 
   public function update($data)
   {
-    $sql = "UPDATE {$this->table} SET total = :total, status = :status, id_client = :id_client, deleted = :deleted WHERE id = :id";
+    $sql = "UPDATE {$this->table} SET total = :total, status = :status, id_client = :id_client, id_user = :id_user, deleted = :deleted WHERE id = :id";
 
 
     foreach ($data as $column => $value) {
@@ -142,6 +141,7 @@ class SalesModel extends Connection
       $stmt->bindParam(':total', $this->total);
       $stmt->bindParam(':status', $this->status);
       $stmt->bindParam(':id_client', $this->id_client);
+      $stmt->bindParam(':id_user', $this->id_user);
       $stmt->bindParam(':deleted', $this->deleted);
       $stmt->bindParam(':id', $this->id);
       $stmt->execute();

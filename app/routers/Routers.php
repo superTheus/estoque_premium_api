@@ -10,6 +10,7 @@ use App\Controllers\ClientsController;
 use App\Controllers\CompanyController;
 use App\Controllers\ContasController;
 use App\Controllers\ContasPagarReceberController;
+use App\Controllers\InputsController;
 use App\Controllers\ProductsController;
 use App\Controllers\SalesController;
 use App\Controllers\SalesProductsController;
@@ -316,6 +317,20 @@ class Routers
         $data = json_decode(file_get_contents('php://input'), true);
         $balanceController = new BalanceController();
         $balanceController->create($data);
+      });
+    });
+
+    $router->mount('/inputs', function () use ($router) {
+      $router->post('/list', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $inputsController = new InputsController();
+        $inputsController->find($data);
+      });
+
+      $router->post('/insert', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $inputsController = new InputsController();
+        $inputsController->create($data);
       });
     });
 
