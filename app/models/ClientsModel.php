@@ -133,12 +133,12 @@ class ClientsModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (nome, apelido, razao_social, rg_inscricao, email, celular, cep, endereco, documento, cidade, numero, bairro, complemento, data_nascimento, icms, genero, id_company) 
-            VALUES (:nome, :apelido, :razao_social, :rg_inscricao, :email, :celular, :cep, :endereco, :documento, :cidade, :numero, :bairro, :complemento, :data_nascimento, :icms, :genero, :id_company)";
+    $sql = "INSERT INTO {$this->table} (name, apelido, razao_social, rg_inscricao, email, celular, cep, endereco, documento, cidade, numero, bairro, complemento, data_nascimento, icms, genero, id_company) 
+            VALUES (:name, :apelido, :razao_social, :rg_inscricao, :email, :celular, :cep, :endereco, :documento, :cidade, :numero, :bairro, :complemento, :data_nascimento, :icms, :genero, :id_company)";
 
     try {
       $stmt = $this->conn->prepare($sql);
-      $stmt->bindValue(':nome', isset($data['nome']) ? $data['nome'] : null);
+      $stmt->bindValue(':name', isset($data['nome']) ? $data['nome'] : null);
       $stmt->bindValue(':apelido', isset($data['apelido']) ? $data['apelido'] : null);
       $stmt->bindValue(':razao_social', isset($data['razao_social']) ? $data['razao_social'] : null);
       $stmt->bindValue(':rg_inscricao', isset($data['rg_inscricao']) ? $data['rg_inscricao'] : null);
@@ -168,7 +168,7 @@ class ClientsModel extends Connection
   public function update($data)
   {
     $sql = "UPDATE {$this->table} SET 
-      nome = :nome, 
+      name = :name, 
       apelido = :apelido, 
       razao_social = :razao_social, 
       rg_inscricao = :rg_inscricao, 
