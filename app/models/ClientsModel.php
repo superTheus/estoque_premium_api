@@ -9,7 +9,7 @@ class ClientsModel extends Connection
 {
   private $conn;
   private $id;
-  private $nome;
+  private $name;
   private $apelido;
   private $razao_social;
   private $rg_inscricao;
@@ -49,7 +49,7 @@ class ClientsModel extends Connection
 
       $client = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-      $this->setNome($client['nome']);
+      $this->setName($client['name']);
       $this->setApelido($client['apelido']);
       $this->setRazao_social($client['razao_social']);
       $this->setRg_inscricao($client['rg_inscricao']);
@@ -75,7 +75,7 @@ class ClientsModel extends Connection
   {
     $data = new stdClass();
     $data->id = $this->getId();
-    $data->nome = $this->getNome();
+    $data->name = $this->getName();
     $data->apelido = $this->getApelido();
     $data->razao_social = $this->getRazao_social();
     $data->rg_inscricao = $this->getRg_inscricao();
@@ -133,12 +133,12 @@ class ClientsModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (nome, apelido, razao_social, rg_inscricao, email, celular, cep, endereco, documento, cidade, numero, bairro, complemento, data_nascimento, icms, genero, id_company) 
-            VALUES (:nome, :apelido, :razao_social, :rg_inscricao, :email, :celular, :cep, :endereco, :documento, :cidade, :numero, :bairro, :complemento, :data_nascimento, :icms, :genero, :id_company)";
+    $sql = "INSERT INTO {$this->table} (name, apelido, razao_social, rg_inscricao, email, celular, cep, endereco, documento, cidade, numero, bairro, complemento, data_nascimento, icms, genero, id_company) 
+            VALUES (:name, :apelido, :razao_social, :rg_inscricao, :email, :celular, :cep, :endereco, :documento, :cidade, :numero, :bairro, :complemento, :data_nascimento, :icms, :genero, :id_company)";
 
     try {
       $stmt = $this->conn->prepare($sql);
-      $stmt->bindValue(':nome', isset($data['nome']) ? $data['nome'] : null);
+      $stmt->bindValue(':name', isset($data['name']) ? $data['name'] : null);
       $stmt->bindValue(':apelido', isset($data['apelido']) ? $data['apelido'] : null);
       $stmt->bindValue(':razao_social', isset($data['razao_social']) ? $data['razao_social'] : null);
       $stmt->bindValue(':rg_inscricao', isset($data['rg_inscricao']) ? $data['rg_inscricao'] : null);
@@ -168,7 +168,7 @@ class ClientsModel extends Connection
   public function update($data)
   {
     $sql = "UPDATE {$this->table} SET 
-      nome = :nome, 
+      name = :name, 
       apelido = :apelido, 
       razao_social = :razao_social, 
       rg_inscricao = :rg_inscricao, 
@@ -194,7 +194,7 @@ class ClientsModel extends Connection
 
     try {
       $stmt = $this->conn->prepare($sql);
-      $stmt->bindValue(':nome', $this->nome);
+      $stmt->bindValue(':name', $this->name);
       $stmt->bindValue(':apelido', $this->apelido);
       $stmt->bindValue(':razao_social', $this->razao_social);
       $stmt->bindValue(':rg_inscricao', $this->rg_inscricao);
@@ -250,26 +250,6 @@ class ClientsModel extends Connection
   public function setId($id)
   {
     $this->id = $id;
-
-    return $this;
-  }
-
-  /**
-   * Get the value of nome
-   */
-  public function getNome()
-  {
-    return $this->nome;
-  }
-
-  /**
-   * Set the value of nome
-   *
-   * @return  self
-   */
-  public function setNome($nome)
-  {
-    $this->nome = $nome;
 
     return $this;
   }
@@ -590,6 +570,26 @@ class ClientsModel extends Connection
   public function setDeleted($deleted)
   {
     $this->deleted = $deleted;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of name
+   */
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  /**
+   * Set the value of name
+   *
+   * @return  self
+   */
+  public function setName($name)
+  {
+    $this->name = $name;
 
     return $this;
   }

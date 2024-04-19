@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\ClientsModel;
 use App\Models\ProductsModel;
 use App\Models\SalesModel;
 use App\Models\SalesProductsModel;
@@ -25,12 +26,11 @@ class SalesController
 
     if ($results) {
       foreach ($results as $key => $result) {
-
         $userModel = new UserModel($result->id_user);
         $results[$key]->user = $userModel->getCurrentUser();
 
-        $clientModel = new UserModel($result->id_client);
-        $results[$key]->client = $clientModel->getCurrentUser();
+        $clientModel = new ClientsModel($result->id_client);
+        $results[$key]->client = $clientModel->getCurrentClient();
 
         $salesProducts = new SalesProductsModel();
         $results[$key]->products = $salesProducts->find([
