@@ -17,6 +17,7 @@ use App\Controllers\SalesProductsController;
 use App\Controllers\SubcategoryController;
 use App\Controllers\SupplierController;
 use App\Controllers\UsersController;
+use App\Controllers\ContaController;
 use Bramus\Router\Router;
 
 class Routers
@@ -331,6 +332,26 @@ class Routers
         $data = json_decode(file_get_contents('php://input'), true);
         $inputsController = new InputsController();
         $inputsController->create($data);
+      });
+    });
+
+    $router->mount('/conta', function () use ($router) {
+      $router->post('/list', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $contaController = new ContaController();
+        $contaController->find($data);
+      });
+
+      $router->post('/insert', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $contaController = new ContaController();
+        $contaController->create($data);
+      });
+
+      $router->put('/update/{id}', function ($id) {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $contaController = new ContaController($id);
+        $contaController->update($data);
       });
     });
 
