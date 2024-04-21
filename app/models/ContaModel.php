@@ -19,7 +19,9 @@ class ContaModel extends Connection
   private $date_finance;
   private $date_expiration;
   private $observation;
+  private $company;
   private $status;
+  private $deleted;
   private $table = 'conta';
 
   public function __construct($id = null)
@@ -54,6 +56,8 @@ class ContaModel extends Connection
       $this->setDate_expiration($conta['date_expiration']);
       $this->setObservation($conta['observation']);
       $this->setStatus($conta['status']);
+      $this->setCompany($conta['company']);
+      $this->setDeleted($conta['deleted']);
     } catch (\PDOException $e) {
       echo $e->getMessage();
     }
@@ -74,11 +78,13 @@ class ContaModel extends Connection
     $data->date_expiration = $this->getDate_expiration();
     $data->observation = $this->getObservation();
     $data->status = $this->getStatus();
+    $data->company = $this->getCompany();
+    $data->deleted = $this->getDeleted();
 
     return $data;
   }
 
-  public function find($filter = [], $limit = null)
+  public function find($filter = [], $limit = null, $where = null)
   {
     $sql = "SELECT * FROM {$this->table}";
 
@@ -88,6 +94,16 @@ class ContaModel extends Connection
         return "$column = :$column";
       }, array_keys($filter)));
     }
+
+    if ($where !== null) {
+      if (!empty($filter)) {
+        $sql .= " AND $where";
+      } else {
+        $sql .= " WHERE $where";
+      }
+    }
+
+    $sql .= " ORDER BY id DESC";
 
     if ($limit !== null) {
       $sql .= " LIMIT :limit";
@@ -116,8 +132,8 @@ class ContaModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (value, payform, client, number_order, type, wild, portion_value, date_finance, date_expiration, observation, status) 
-            VALUES (:value, :payform, :client, :number_order, :type, :wild, :portion_value, :date_finance, :date_expiration, :observation, :status)";
+    $sql = "INSERT INTO {$this->table} (value, payform, client, number_order, type, wild, portion_value, date_finance, date_expiration, observation, status, company) 
+            VALUES (:value, :payform, :client, :number_order, :type, :wild, :portion_value, :date_finance, :date_expiration, :observation, :status, :company)";
 
     try {
       $stmt = $this->conn->prepare($sql);
@@ -132,6 +148,7 @@ class ContaModel extends Connection
       $stmt->bindValue(':date_expiration', isset($data['date_expiration']) ? $data['date_expiration'] : null);
       $stmt->bindValue(':observation', isset($data['observation']) ? $data['observation'] : null);
       $stmt->bindValue(':status', isset($data['status']) ? $data['status'] : null);
+      $stmt->bindValue(':company', isset($data['company']) ? $data['company'] : null);
       $stmt->execute();
 
       $this->setId($this->conn->lastInsertId());
@@ -155,7 +172,8 @@ class ContaModel extends Connection
       date_finance = :date_finance,
       date_expiration = :date_expiration,
       observation = :observation,
-      status = :status
+      status = :status,
+      deleted = :delete
     WHERE id = :id";
 
     foreach ($data as $column => $value) {
@@ -175,6 +193,7 @@ class ContaModel extends Connection
       $stmt->bindValue(':date_expiration', $this->date_expiration);
       $stmt->bindValue(':observation', $this->observation);
       $stmt->bindValue(':status', $this->status);
+      $stmt->bindValue(':delete', $this->deleted);
       $stmt->bindValue(':id', $this->id);
       $stmt->execute();
 
@@ -434,6 +453,46 @@ class ContaModel extends Connection
   public function setPortion_value($portion_value)
   {
     $this->portion_value = $portion_value;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of company
+   */
+  public function getCompany()
+  {
+    return $this->company;
+  }
+
+  /**
+   * Set the value of company
+   *
+   * @return  self
+   */
+  public function setCompany($company)
+  {
+    $this->company = $company;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of deleted
+   */
+  public function getDeleted()
+  {
+    return $this->deleted;
+  }
+
+  /**
+   * Set the value of deleted
+   *
+   * @return  self
+   */
+  public function setDeleted($deleted)
+  {
+    $this->deleted = $deleted;
 
     return $this;
   }

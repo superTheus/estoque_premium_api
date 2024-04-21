@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\ClientsModel;
+use App\Models\ContaFormModel;
 use App\Models\ContaModel;
 
 class ContaController
@@ -19,13 +20,17 @@ class ContaController
     $contaModel = new ContaModel();
     $filter = $data && isset($data['filter']) ? $data['filter'] : null;
     $limit = $data && isset($data['limit']) ? $data['limit'] : null;
-    $results = $contaModel->find($filter, $limit);
+    $where = $data && isset($data['where']) ? $data['where'] : null;
+    $results = $contaModel->find($filter, $limit, $where);
 
     if ($results) {
 
       foreach ($results as $key => $value) {
         $client = new ClientsModel($value['client']);
         $results[$key]['clientData'] = $client->getCurrentClient();
+
+        $payment = new ContaFormModel();
+        $results[$key]['payments'] = $payment->findByConta($value['id']);
       }
 
       http_response_code(200);
@@ -59,6 +64,14 @@ class ContaController
     $result = $this->contaModel->update($data);
 
     if ($result) {
+
+      if ($data['payments']) {
+        foreach ($data['payments'] as $key => $value) {
+          $payment = new ContaFormModel();
+          $payment->create($value);
+        }
+      }
+
       http_response_code(200);
       echo json_encode(array(
         "message" => "Data updated successfully",

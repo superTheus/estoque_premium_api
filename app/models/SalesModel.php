@@ -84,11 +84,11 @@ class SalesModel extends Connection
       }, array_keys($filter)));
     }
 
+    $sql .= " ORDER BY date_hour DESC";
+
     if ($limit !== null) {
       $sql .= " LIMIT :limit";
     }
-
-    $sql .= " ORDER BY date_hour DESC";
 
     try {
       $stmt = $this->conn->prepare($sql);
