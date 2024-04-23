@@ -355,6 +355,14 @@ class Routers
       });
     });
 
+    $router->mount('/log', function () use ($router) {
+      $router->post('/lastpass', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $userController = new UsersController();
+        $userController->setLastPass($data);
+      });
+    });
+
     $router->run($callback);
   }
 }

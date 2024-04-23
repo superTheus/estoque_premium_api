@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Models\CompanyModel;
 use App\Models\UserModel;
+use App\Models\PasswordLastsModel;
 
 class UsersController
 {
@@ -21,6 +23,16 @@ class UsersController
     $results = $userModel->find($filter, $limit);
 
     if ($results) {
+
+      foreach ($results as $key => $user) {
+        $companyModel = new CompanyModel($user['company']);
+        $results[$key]['companyData'] = $companyModel->getCurrentCompany();
+
+        $passwordLastsModel = new PasswordLastsModel();
+        $last = $passwordLastsModel->find($user['id']);
+        $results[$key]['lastpassword'] = $last ? $last[0] : null;
+      }
+
       http_response_code(200); // OK
       echo json_encode(array(
         "message" => "Results found",
@@ -61,6 +73,23 @@ class UsersController
     } else {
       http_response_code(404); // Not Found
       echo json_encode(['error' => 'Data not updated successfully']);
+    }
+  }
+
+  public function setLastPass($data)
+  {
+    $passwordLastsModel = new PasswordLastsModel();
+    $result = $passwordLastsModel->create($data);
+
+    if ($result) {
+      http_response_code(200); // OK
+      echo json_encode(array(
+        "message" => "Data created successfully",
+        "results" => $result
+      ));
+    } else {
+      http_response_code(404); // Not Found
+      echo json_encode(['error' => 'Data not created successfully']);
     }
   }
 }

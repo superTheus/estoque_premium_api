@@ -25,6 +25,7 @@ class CompanyModel extends Connection
   private $password;
   private $csc;
   private $csc_id;
+  private $type;
   private $table = 'company';
 
   public function __construct($id = null)
@@ -64,6 +65,7 @@ class CompanyModel extends Connection
       $this->setPassword($company['password']);
       $this->setCsc($company['csc']);
       $this->setCsc_id($company['csc_id']);
+      $this->setType($company['type']);
     } catch (\PDOException $e) {
       echo $e->getMessage();
     }
@@ -89,6 +91,7 @@ class CompanyModel extends Connection
     $data->password = $this->getPassword();
     $data->csc = $this->getCsc();
     $data->csc_id = $this->getCsc_id();
+    $data->type = $this->getType();
     return $data;
   }
 
@@ -545,6 +548,26 @@ class CompanyModel extends Connection
   public function setCsc_id($csc_id)
   {
     $this->csc_id = $csc_id;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of type
+   */
+  public function getType()
+  {
+    return $this->type;
+  }
+
+  /**
+   * Set the value of type
+   *
+   * @return  self
+   */
+  public function setType($type)
+  {
+    $this->type = $type;
 
     return $this;
   }
