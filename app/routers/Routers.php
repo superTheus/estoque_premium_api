@@ -18,6 +18,7 @@ use App\Controllers\SubcategoryController;
 use App\Controllers\SupplierController;
 use App\Controllers\UsersController;
 use App\Controllers\ContaController;
+use App\Controllers\PermissoesSistemaController;
 use Bramus\Router\Router;
 
 class Routers
@@ -360,6 +361,26 @@ class Routers
         $data = json_decode(file_get_contents('php://input'), true);
         $userController = new UsersController();
         $userController->setLastPass($data);
+      });
+    });
+
+    $router->mount('/permission', function () use ($router) {
+      $router->post('/list', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $permissoesSistemaController = new PermissoesSistemaController();
+        $permissoesSistemaController->find($data);
+      });
+
+      $router->post('/insert', function () {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $permissoesSistemaController = new PermissoesSistemaController();
+        $permissoesSistemaController->create($data);
+      });
+
+      $router->put('/update/{id}', function ($id) {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $permissoesSistemaController = new PermissoesSistemaController($id);
+        $permissoesSistemaController->update($data);
       });
     });
 
