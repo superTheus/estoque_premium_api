@@ -11,6 +11,7 @@ class PermissoesSistemaModel extends Connection
   private $id;
   private $id_user;
   private $id_company;
+  private $nome_empresa;
   private $responsavel;
   private $telefone;
   private $email;
@@ -47,6 +48,7 @@ class PermissoesSistemaModel extends Connection
 
       $this->setId_user($balance['id_user']);
       $this->setId_company($balance['id_company']);
+      $this->setNome_empresa($balance['nome_empresa']);
       $this->setResponsavel($balance['responsavel']);
       $this->setTelefone($balance['telefone']);
       $this->setEmail($balance['email']);
@@ -69,6 +71,7 @@ class PermissoesSistemaModel extends Connection
     $data->id = $this->getId();
     $data->id_user = $this->getId_user();
     $data->id_company = $this->getId_company();
+    $data->nome_empresa = $this->getNome_empresa();
     $data->responsavel = $this->getResponsavel();
     $data->telefone = $this->getTelefone();
     $data->email = $this->getEmail();
@@ -121,13 +124,14 @@ class PermissoesSistemaModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (id_user, id_company, responsavel, telefone, email, valor_mensal, limite_nfce, limite_nfe, limite_empresas, limite_usuarios, limite_produtos, limite_clientes, date_expiration) 
-    VALUES (:id_user, :id_company, :responsavel, :telefone, :email, :valor_mensal, :limite_nfce, :limite_nfe, :limite_empresas, :limite_usuarios, :limite_produtos, :limite_clientes, :date_expiration)";
+    $sql = "INSERT INTO {$this->table} (id_user, id_company, nome_empresa, responsavel, telefone, email, valor_mensal, limite_nfce, limite_nfe, limite_empresas, limite_usuarios, limite_produtos, limite_clientes, date_expiration) 
+    VALUES (:id_user, :id_company, :nome_empresa, :responsavel, :telefone, :email, :valor_mensal, :limite_nfce, :limite_nfe, :limite_empresas, :limite_usuarios, :limite_produtos, :limite_clientes, :date_expiration)";
 
     try {
       $stmt = $this->conn->prepare($sql);
       $stmt->bindParam(':id_user', $data['id_user']);
       $stmt->bindParam(':id_company', $data['id_company']);
+      $stmt->bindParam(':nome_empresa', $data['nome_empresa']);
       $stmt->bindParam(':responsavel', $data['responsavel']);
       $stmt->bindParam(':telefone', $data['telefone']);
       $stmt->bindParam(':email', $data['email']);
@@ -153,6 +157,7 @@ class PermissoesSistemaModel extends Connection
   {
     $sql = "UPDATE {$this->table} 
             SET 
+              nome_empresa = :nome_empresa, 
               responsavel = :responsavel, 
               telefone = :telefone, 
               email = :email, 
@@ -174,6 +179,7 @@ class PermissoesSistemaModel extends Connection
     try {
       $stmt = $this->conn->prepare($sql);
       $stmt->bindParam(':id', $this->id);
+      $stmt->bindParam(':nome_empresa', $this->nome_empresa);
       $stmt->bindParam(':responsavel', $this->responsavel);
       $stmt->bindParam(':telefone', $this->telefone);
       $stmt->bindParam(':email', $this->email);
@@ -470,6 +476,26 @@ class PermissoesSistemaModel extends Connection
   public function setDate_expiration($date_expiration)
   {
     $this->date_expiration = $date_expiration;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of nome_empresa
+   */
+  public function getNome_empresa()
+  {
+    return $this->nome_empresa;
+  }
+
+  /**
+   * Set the value of nome_empresa
+   *
+   * @return  self
+   */
+  public function setNome_empresa($nome_empresa)
+  {
+    $this->nome_empresa = $nome_empresa;
 
     return $this;
   }
