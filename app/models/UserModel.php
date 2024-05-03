@@ -17,6 +17,7 @@ class UserModel extends Connection
   private $use_system;
   private $company;
   private $ativo;
+  private $type;
   private $table = 'users';
 
   public function __construct($id = null)
@@ -47,6 +48,7 @@ class UserModel extends Connection
       $this->setCompany($user['company']);
       $this->setAtivo($user['ativo']);
       $this->setPassword($user['password']);
+      $this->setType($user['type']);
     } catch (\PDOException $e) {
       echo $e->getMessage();
     } catch (\PDOException $e) {
@@ -64,7 +66,9 @@ class UserModel extends Connection
     $data->company = $this->getCompany();
     $data->ativo = $this->getAtivo();
     $data->password = $this->getPassword();
-
+    $data->profile = $this->getProfile();
+    $data->use_system = $this->getUse_system();
+    $data->type = $this->getType();
     return $data;
   }
 
@@ -110,7 +114,7 @@ class UserModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (name, email, password, photo, company, profile, use_system) VALUES (:name, :email, :password, :photo, :company, :profile, :use_system)";
+    $sql = "INSERT INTO {$this->table} (name, email, password, photo, company, profile, use_system, type) VALUES (:name, :email, :password, :photo, :company, :profile, :use_system, :type)";
 
     try {
       $password_hash = md5($data['password']);
@@ -122,6 +126,7 @@ class UserModel extends Connection
       $stmt->bindParam(':company', $data['company']);
       $stmt->bindParam(':profile', $data['profile']);
       $stmt->bindParam(':use_system', $data['use_system']);
+      $stmt->bindParam(':type', $data['type']);
       $stmt->execute();
 
       $this->setId($this->conn->lastInsertId());
@@ -353,6 +358,26 @@ class UserModel extends Connection
   public function setUse_system($use_system)
   {
     $this->use_system = $use_system;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of type
+   */
+  public function getType()
+  {
+    return $this->type;
+  }
+
+  /**
+   * Set the value of type
+   *
+   * @return  self
+   */
+  public function setType($type)
+  {
+    $this->type = $type;
 
     return $this;
   }
