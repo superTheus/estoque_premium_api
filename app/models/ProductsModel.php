@@ -20,6 +20,7 @@ class ProductsModel extends Connection
   private $id_fornecedor;
   private $control_stock;
   private $stock;
+  private $stock_minimum;
   private $deleted;
   private $table = 'prodcuts';
 
@@ -131,8 +132,8 @@ class ProductsModel extends Connection
   public function create($data)
   {
     $sql = "INSERT INTO {$this->table} 
-          (description, id_company, id_brand, id_category, id_subcategory, price_sale, price_cost, ncm, id_fornecedor, control_stock, stock) 
-           VALUES (:description, :id_company, :id_brand, :id_category, :id_subcategory, :price_sale, :price_cost, :ncm, :id_fornecedor, :control_stock, :stock)";
+          (description, id_company, id_brand, id_category, id_subcategory, price_sale, price_cost, ncm, id_fornecedor, control_stock, stock, stock_minimum) 
+           VALUES (:description, :id_company, :id_brand, :id_category, :id_subcategory, :price_sale, :price_cost, :ncm, :id_fornecedor, :control_stock, :stock, :stock_minimum)";
 
     try {
       $stmt = $this->conn->prepare($sql);
@@ -147,6 +148,7 @@ class ProductsModel extends Connection
       $stmt->bindValue(':id_fornecedor', $data['id_fornecedor']);
       $stmt->bindValue(':control_stock', $data['control_stock']);
       $stmt->bindValue(':stock', $data['stock']);
+      $stmt->bindValue(':stock_minimum', $data['stock_minimum']);
       $stmt->execute();
 
       $this->setId($this->conn->lastInsertId());
@@ -170,6 +172,7 @@ class ProductsModel extends Connection
               id_fornecedor = :id_fornecedor, 
               control_stock = :control_stock, 
               stock = :stock,
+              stock_minimum = :stock_minimum,
               deleted = :deleted
             WHERE id = :id";
 
@@ -190,6 +193,7 @@ class ProductsModel extends Connection
       $stmt->bindValue(':id_fornecedor', $this->id_fornecedor);
       $stmt->bindValue(':control_stock', $this->control_stock);
       $stmt->bindValue(':stock', $this->stock);
+      $stmt->bindValue(':stock_minimum', $this->stock_minimum);
       $stmt->bindValue(':deleted', $this->deleted);
       $stmt->bindParam(':id', $this->id);
       $stmt->execute();
@@ -470,6 +474,26 @@ class ProductsModel extends Connection
   public function setDeleted($deleted)
   {
     $this->deleted = $deleted;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of stock_minimum
+   */
+  public function getStock_minimum()
+  {
+    return $this->stock_minimum;
+  }
+
+  /**
+   * Set the value of stock_minimum
+   *
+   * @return  self
+   */
+  public function setStock_minimum($stock_minimum)
+  {
+    $this->stock_minimum = $stock_minimum;
 
     return $this;
   }
