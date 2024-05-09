@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\ClientsModel;
 use App\Models\ProductsModel;
+use App\Models\SalePayFormsModel;
 use App\Models\SalesModel;
 use App\Models\SalesProductsModel;
 use App\Models\UserModel;
@@ -76,6 +77,14 @@ class SalesController
     $result = $this->salesModel->update($data);
 
     if ($result) {
+      if (isset($data['payforms'])) {
+        foreach ($data['payforms'] as $payform) {
+          $payform['id_sale'] = $data['id'];
+          $salesPayFormsModel = new SalePayFormsModel();
+          $salesPayFormsModel->create($payform);
+        }
+      }
+
       http_response_code(200); // OK
       echo json_encode(array(
         "message" => "Data updated successfully",
