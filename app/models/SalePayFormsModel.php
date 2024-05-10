@@ -13,6 +13,8 @@ class SalePayFormsModel extends Connection
   private $id_sale;
   private $date;
   private $value;
+  private $portion_number;
+  private $portion_total;
   private $table = 'sales_payform';
 
   public function __construct($id = null)
@@ -40,6 +42,8 @@ class SalePayFormsModel extends Connection
       $this->setId_sale($category['id_sale']);
       $this->setDate($category['date']);
       $this->setValue($category['value']);
+      $this->setPortion_number($category['portion_number']);
+      $this->setPortion_total($category['portion_total']);
     } catch (\PDOException $e) {
       echo $e->getMessage();
     }
@@ -53,6 +57,8 @@ class SalePayFormsModel extends Connection
     $data->id_sale = $this->getId_sale();
     $data->date = $this->getDate();
     $data->value = $this->getValue();
+    $data->portion = $this->getPortion_number();
+    $data->portion_total = $this->getPortion_total();
     return $data;
   }
 
@@ -94,7 +100,8 @@ class SalePayFormsModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (id_form, id_sale, date, value) VALUES (:id_form, :id_sale, :date, :value)";
+    $sql = "INSERT INTO {$this->table} (id_form, id_sale, date, value, portion_number, portion_total) 
+            VALUES (:id_form, :id_sale, :date, :value, :portion_number, :portion_total)";
 
     try {
       $stmt = $this->conn->prepare($sql);
@@ -102,6 +109,8 @@ class SalePayFormsModel extends Connection
       $stmt->bindParam(':id_sale', $data['id_sale']);
       $stmt->bindParam(':date', $data['date']);
       $stmt->bindParam(':value', $data['value']);
+      $stmt->bindParam(':portion_number', $data['portion_number']);
+      $stmt->bindParam(':portion_total', $data['portion_total']);
       $stmt->execute();
 
       $this->setId($this->conn->lastInsertId());
@@ -222,6 +231,46 @@ class SalePayFormsModel extends Connection
   public function setValue($value)
   {
     $this->value = $value;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of portion_total
+   */
+  public function getPortion_total()
+  {
+    return $this->portion_total;
+  }
+
+  /**
+   * Set the value of portion_total
+   *
+   * @return  self
+   */
+  public function setPortion_total($portion_total)
+  {
+    $this->portion_total = $portion_total;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of portion_number
+   */
+  public function getPortion_number()
+  {
+    return $this->portion_number;
+  }
+
+  /**
+   * Set the value of portion_number
+   *
+   * @return  self
+   */
+  public function setPortion_number($portion_number)
+  {
+    $this->portion_number = $portion_number;
 
     return $this;
   }

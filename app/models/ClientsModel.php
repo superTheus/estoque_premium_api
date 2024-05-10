@@ -26,6 +26,7 @@ class ClientsModel extends Connection
   private $icms;
   private $genero;
   private $deleted;
+  private $show_client;
   private $table = 'clients';
 
   public function __construct($id = null)
@@ -66,6 +67,7 @@ class ClientsModel extends Connection
       $this->setIcms($client['icms']);
       $this->setGenero($client['genero']);
       $this->setDeleted($client['deleted']);
+      $this->setShow_client($client['show_client']);
     } catch (\PDOException $e) {
       echo $e->getMessage();
     }
@@ -92,6 +94,7 @@ class ClientsModel extends Connection
     $data->icms = $this->getIcms();
     $data->genero = $this->getGenero();
     $data->deleted = $this->getDeleted();
+    $data->show_client = $this->getShow_client();
     return $data;
   }
 
@@ -590,6 +593,26 @@ class ClientsModel extends Connection
   public function setName($name)
   {
     $this->name = $name;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of show_client
+   */
+  public function getShow_client()
+  {
+    return $this->show_client;
+  }
+
+  /**
+   * Set the value of show_client
+   *
+   * @return  self
+   */
+  public function setShow_client($show_client)
+  {
+    $this->show_client = $show_client;
 
     return $this;
   }
