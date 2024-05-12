@@ -33,7 +33,7 @@ class ClientsModel extends Connection
   {
     $this->conn = $this->openConnection();
 
-    if ($id) {
+    if ($id !== null) {
       $this->setId($id);
       $this->getById();
     }

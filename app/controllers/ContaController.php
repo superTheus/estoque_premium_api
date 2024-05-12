@@ -24,7 +24,6 @@ class ContaController
     $results = $contaModel->find($filter, $limit, $where);
 
     if ($results) {
-
       foreach ($results as $key => $value) {
         $client = new ClientsModel($value['client']);
         $results[$key]['clientData'] = $client->getCurrentClient();

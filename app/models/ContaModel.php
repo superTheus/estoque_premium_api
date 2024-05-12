@@ -103,7 +103,7 @@ class ContaModel extends Connection
       }
     }
 
-    $sql .= " ORDER BY id DESC";
+    $sql .= " ORDER BY date_expiration ASC";
 
     if ($limit !== null) {
       $sql .= " LIMIT :limit";
