@@ -13,6 +13,8 @@ class InputsModel extends Connection
   private $date_hour;
   private $id_user;
   private $id_company;
+  private $type;
+  private $observations;
 
   private $id_product;
   private $quantity;
@@ -44,6 +46,8 @@ class InputsModel extends Connection
       $this->setId_user($balance['id_user']);
       $this->setId_company($balance['id_company']);
       $this->setDate_hour($balance['date_hour']);
+      $this->setType($balance['type']);
+      $this->setObservations($balance['observations']);
     } catch (\PDOException $e) {
       echo $e->getMessage();
     }
@@ -58,6 +62,8 @@ class InputsModel extends Connection
     $data->getId_user = $this->getId_user();
     $data->date_hour = $this->getDate_hour();
     $data->products = $this->findProducts();
+    $data->type = $this->getType();
+    $data->observations = $this->getObservations();
     return $data;
   }
 
@@ -118,13 +124,15 @@ class InputsModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (documento, id_user, id_company) VALUES (:documento, :id_user, :id_company)";
+    $sql = "INSERT INTO {$this->table} (documento, id_user, id_company, type, observations) VALUES (:documento, :id_user, :id_company, :type, :observations)";
 
     try {
       $stmt = $this->conn->prepare($sql);
       $stmt->bindParam(':documento', $data['documento']);
       $stmt->bindParam(':id_user', $data['id_user']);
       $stmt->bindParam(':id_company', $data['id_company']);
+      $stmt->bindParam(':type', $data['type']);
+      $stmt->bindParam(':observations', $data['observations']);
       $stmt->execute();
 
       $this->setId($this->conn->lastInsertId());
@@ -137,13 +145,14 @@ class InputsModel extends Connection
 
   public function insertProduct()
   {
-    $sql = "INSERT INTO input_products (id_input, id_product, quantity) VALUES (:id_input, :id_product, :quantity)";
+    $sql = "INSERT INTO input_products (id_input, id_product, quantity, type) VALUES (:id_input, :id_product, :quantity, :type)";
 
     try {
       $stmt = $this->conn->prepare($sql);
       $stmt->bindValue(':id_input', $this->getId());
       $stmt->bindValue(':id_product', $this->getId_product());
       $stmt->bindValue(':quantity', $this->getQuantity());
+      $stmt->bindValue(':type', $this->getType());
       $stmt->execute();
 
       return $this->conn->lastInsertId();
@@ -288,6 +297,46 @@ class InputsModel extends Connection
   public function setQuantity($quantity)
   {
     $this->quantity = $quantity;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of type
+   */
+  public function getType()
+  {
+    return $this->type;
+  }
+
+  /**
+   * Set the value of type
+   *
+   * @return  self
+   */
+  public function setType($type)
+  {
+    $this->type = $type;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of observations
+   */
+  public function getObservations()
+  {
+    return $this->observations;
+  }
+
+  /**
+   * Set the value of observations
+   *
+   * @return  self
+   */
+  public function setObservations($observations)
+  {
+    $this->observations = $observations;
 
     return $this;
   }
