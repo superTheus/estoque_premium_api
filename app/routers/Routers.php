@@ -19,6 +19,7 @@ use App\Controllers\SupplierController;
 use App\Controllers\UsersController;
 use App\Controllers\ContaController;
 use App\Controllers\PermissoesSistemaController;
+use App\Controllers\UsersPermissoesController;
 use Bramus\Router\Router;
 
 class Routers
@@ -59,6 +60,12 @@ class Routers
         $data = json_decode(file_get_contents('php://input'), true);
         $userController = new UsersController($id);
         $userController->update($data);
+      });
+
+      $router->put('/permission/{id}', function ($id) {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $userPermissoesSistemaController = new UsersPermissoesController($id);
+        $userPermissoesSistemaController->update($data);
       });
     });
 

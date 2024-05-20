@@ -9,6 +9,8 @@ class CompanyModel extends Connection
 {
   private $conn;
   private $id;
+  private $nome;
+  private $sobrenome;
   private $cnpj;
   private $razao_social;
   private $nome_fantasia;
@@ -26,6 +28,7 @@ class CompanyModel extends Connection
   private $csc;
   private $csc_id;
   private $type;
+  private $ativo;
   private $table = 'company';
 
   public function __construct($id = null)
@@ -133,13 +136,15 @@ class CompanyModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (cnpj, razao_social, nome_fantasia, telefone, email, cep, logradouro, numero, bairro, cidade, uf) VALUES (:cnpj, :razao_social, :nome_fantasia, :telefone, :email, :cep, :logradouro, :numero, :bairro, :cidade, :uf)";
+    $sql = "INSERT INTO {$this->table} (nome, sobrenome, cnpj, razao_social, nome_fantasia, telefone, email, cep, logradouro, numero, bairro, cidade, uf) 
+    VALUES (:nome, :sobrenome, :cnpj, :razao_social, :nome_fantasia, :telefone, :email, :cep, :logradouro, :numero, :bairro, :cidade, :uf)";
 
     try {
       $stmt = $this->conn->prepare($sql);
+      $stmt->bindParam(':nome', $data['nome']);
+      $stmt->bindParam(':sobrenome', $data['sobrenome']);
       $stmt->bindParam(':cnpj', $data['cnpj']);
       $stmt->bindParam(':razao_social', $data['razao_social']);
-      $stmt->bindParam(':cnpj', $data['cnpj']);
       $stmt->bindParam(':nome_fantasia', $data['nome_fantasia']);
       $stmt->bindParam(':telefone', $data['telefone']);
       $stmt->bindParam(':email', $data['email']);
@@ -162,8 +167,11 @@ class CompanyModel extends Connection
   public function update($data)
   {
     $sql = "UPDATE {$this->table} 
-            SET cnpj = :cnpj, razao_social = :razao_social, nome_fantasia = :nome_fantasia, telefone = :telefone, email = :email, cep = :cep, logradouro = :logradouro, numero = :numero, bairro = :bairro, 
-                        cidade = :cidade, uf = :uf, datahora = :datahora, certificate = :certificate, password = :password, csc = :csc, csc_id = :csc_id
+            SET nome = :nome, sobrenome = :sobrenome, cnpj = :cnpj, razao_social = :razao_social, 
+              nome_fantasia = :nome_fantasia, telefone = :telefone, email = :email, cep = :cep, 
+              logradouro = :logradouro, numero = :numero, bairro = :bairro, cidade = :cidade, 
+              uf = :uf, datahora = :datahora, certificate = :certificate, password = :password, 
+              csc = :csc, csc_id = :csc_id, ativo  = :ativo
             WHERE id = :id";
 
 
@@ -174,6 +182,8 @@ class CompanyModel extends Connection
     try {
       $stmt = $this->conn->prepare($sql);
       $stmt->bindParam(':id', $this->id);
+      $stmt->bindParam(':nome', $this->nome);
+      $stmt->bindParam(':sobrenome', $this->sobrenome);
       $stmt->bindParam(':cnpj', $this->cnpj);
       $stmt->bindParam(':razao_social', $this->razao_social);
       $stmt->bindParam(':nome_fantasia', $this->nome_fantasia);
@@ -190,6 +200,7 @@ class CompanyModel extends Connection
       $stmt->bindParam(':password', $this->password);
       $stmt->bindParam(':csc', $this->csc);
       $stmt->bindParam(':csc_id', $this->csc_id);
+      $stmt->bindParam(':ativo', $this->ativo);
       $stmt->execute();
 
       $this->getById();
@@ -568,6 +579,66 @@ class CompanyModel extends Connection
   public function setType($type)
   {
     $this->type = $type;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of nome
+   */
+  public function getNome()
+  {
+    return $this->nome;
+  }
+
+  /**
+   * Set the value of nome
+   *
+   * @return  self
+   */
+  public function setNome($nome)
+  {
+    $this->nome = $nome;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of sobrenome
+   */
+  public function getSobrenome()
+  {
+    return $this->sobrenome;
+  }
+
+  /**
+   * Set the value of sobrenome
+   *
+   * @return  self
+   */
+  public function setSobrenome($sobrenome)
+  {
+    $this->sobrenome = $sobrenome;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of ativo
+   */
+  public function getAtivo()
+  {
+    return $this->ativo;
+  }
+
+  /**
+   * Set the value of ativo
+   *
+   * @return  self
+   */
+  public function setAtivo($ativo)
+  {
+    $this->ativo = $ativo;
 
     return $this;
   }

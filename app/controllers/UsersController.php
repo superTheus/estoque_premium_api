@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\CompanyModel;
 use App\Models\UserModel;
 use App\Models\PasswordLastsModel;
+use App\Models\PermissaoUsuarioModel;
 
 class UsersController
 {
@@ -31,6 +32,13 @@ class UsersController
         $passwordLastsModel = new PasswordLastsModel();
         $last = $passwordLastsModel->find($user['id']);
         $results[$key]['lastpassword'] = $last ? $last[0] : null;
+
+        $permissaoUsuario = new PermissaoUsuarioModel();
+        $permissao = $permissaoUsuario->find([
+          "user" => $user['id']
+        ]);
+
+        $results[$key]['permissao'] = $permissao ? $permissao[0] : null;
       }
 
       http_response_code(200); // OK
@@ -49,6 +57,12 @@ class UsersController
     $result = $this->userModel->create($data);
 
     if ($result) {
+      $permissaoUsuario = new PermissaoUsuarioModel();
+
+      $permissaoUsuario->create([
+        'user' => $result->id,
+      ]);
+
       http_response_code(200); // OK
       echo json_encode(array(
         "message" => "Data created successfully",

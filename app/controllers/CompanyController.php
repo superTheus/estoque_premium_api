@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\CompanyModel;
+use App\Models\PasswordLastsModel;
+use App\Models\UserModel;
 
 class CompanyController
 {
@@ -21,6 +23,17 @@ class CompanyController
     $results = $userModel->find($filter, $limit);
 
     if ($results) {
+
+      foreach ($results as $key => $value) {
+        $results[$key]['users'] = (new UserModel())->find(['company' => $value['id']]);
+
+        foreach ($results[$key]['users'] as $k => $user) {
+          $passwordLastsModel = new PasswordLastsModel();
+          $last = $passwordLastsModel->find($user['id']);
+          $results[$key]['users'][$k]['lastpassword'] = $last ? $last[0] : null;
+        }
+      }
+
       http_response_code(200); // OK
       echo json_encode(array(
         "message" => "Results found",
