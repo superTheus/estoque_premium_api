@@ -114,7 +114,8 @@ class UserModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (name, email, password, photo, company, profile, use_system, type) VALUES (:name, :email, :password, :photo, :company, :profile, :use_system, :type)";
+    $sql = "INSERT INTO {$this->table} (name, email, password, company, profile, use_system, type) 
+            VALUES (:name, :email, :password, :company, :profile, :use_system, :type)";
 
     try {
       $password_hash = md5($data['password']);
@@ -122,7 +123,6 @@ class UserModel extends Connection
       $stmt->bindParam(':name', $data['name']);
       $stmt->bindParam(':email', $data['email']);
       $stmt->bindParam(':password', $password_hash);
-      $stmt->bindParam(':photo', $data['photo']);
       $stmt->bindParam(':company', $data['company']);
       $stmt->bindParam(':profile', $data['profile']);
       $stmt->bindParam(':use_system', $data['use_system']);

@@ -9,7 +9,6 @@ class PermissoesSistemaModel extends Connection
 {
   private $conn;
   private $id;
-  private $id_user;
   private $id_company;
   private $nome_empresa;
   private $responsavel;
@@ -46,7 +45,6 @@ class PermissoesSistemaModel extends Connection
 
       $balance = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-      $this->setId_user($balance['id_user']);
       $this->setId_company($balance['id_company']);
       $this->setNome_empresa($balance['nome_empresa']);
       $this->setResponsavel($balance['responsavel']);
@@ -69,7 +67,6 @@ class PermissoesSistemaModel extends Connection
   {
     $data = new stdClass();
     $data->id = $this->getId();
-    $data->id_user = $this->getId_user();
     $data->id_company = $this->getId_company();
     $data->nome_empresa = $this->getNome_empresa();
     $data->responsavel = $this->getResponsavel();
@@ -124,12 +121,11 @@ class PermissoesSistemaModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (id_user, id_company, nome_empresa, responsavel, telefone, email, valor_mensal, limite_nfce, limite_nfe, limite_empresas, limite_usuarios, limite_produtos, limite_clientes, date_expiration) 
-    VALUES (:id_user, :id_company, :nome_empresa, :responsavel, :telefone, :email, :valor_mensal, :limite_nfce, :limite_nfe, :limite_empresas, :limite_usuarios, :limite_produtos, :limite_clientes, :date_expiration)";
+    $sql = "INSERT INTO {$this->table} (id_company, nome_empresa, responsavel, telefone, email, valor_mensal, limite_nfce, limite_nfe, limite_empresas, limite_usuarios, limite_produtos, limite_clientes, date_expiration) 
+    VALUES (:id_company, :nome_empresa, :responsavel, :telefone, :email, :valor_mensal, :limite_nfce, :limite_nfe, :limite_empresas, :limite_usuarios, :limite_produtos, :limite_clientes, :date_expiration)";
 
     try {
       $stmt = $this->conn->prepare($sql);
-      $stmt->bindParam(':id_user', $data['id_user']);
       $stmt->bindParam(':id_company', $data['id_company']);
       $stmt->bindParam(':nome_empresa', $data['nome_empresa']);
       $stmt->bindParam(':responsavel', $data['responsavel']);
@@ -216,26 +212,6 @@ class PermissoesSistemaModel extends Connection
   public function setId($id)
   {
     $this->id = $id;
-
-    return $this;
-  }
-
-  /**
-   * Get the value of id_user
-   */
-  public function getId_user()
-  {
-    return $this->id_user;
-  }
-
-  /**
-   * Set the value of id_user
-   *
-   * @return  self
-   */
-  public function setId_user($id_user)
-  {
-    $this->id_user = $id_user;
 
     return $this;
   }

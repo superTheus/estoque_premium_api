@@ -107,12 +107,12 @@ class PermissaoUsuarioModel extends Connection
       managerClientes, managerBrands, managerCategories, managerSubcategories,
       showMenuBox, managerBox, showMenuSales, managerSales, showMenuReports,
       showReportsSales, showReportsStock, showMenuStock, managerEntries,
-      showMenuFinance, managerFinance, managerAccount
+      showMenuFinance, managerFinance, managerAccount, issueNfe
     ) VALUES (:user, :showMenuRegister, :managerUsers, :managerSuppliers, :managerProdutos,
       :managerClientes, :managerBrands, :managerCategories, :managerSubcategories,
       :showMenuBox, :managerBox, :showMenuSales, :managerSales, :showMenuReports,
       :showReportsSales, :showReportsStock, :showMenuStock, :managerEntries,
-      :showMenuFinance, :managerFinance, :managerAccount, issueNfe = :issueNfe)";
+      :showMenuFinance, :managerFinance, :managerAccount, :issueNfe)";
 
     try {
       $stmt = $this->conn->prepare($sql);
