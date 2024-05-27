@@ -140,10 +140,6 @@ class PermissaoUsuarioModel extends Connection
       $stmt->bindValue(':issueNfe', isset($data['issueNfe']) ? $data['issueNfe'] : 1);
       $stmt->execute();
     } catch (\PDOException $e) {
-
-      var_dump($e->getMessage());
-      die();
-
       echo $e->getMessage();
     }
   }

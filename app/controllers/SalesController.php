@@ -20,40 +20,41 @@ class SalesController
 
   public function find($data)
   {
-    $salesModel = new SalesModel();
-    $filter = $data && isset($data['filter']) ? $data['filter'] : null;
-    $limit = $data && isset($data['limit']) ? $data['limit'] : null;
-    $results = $salesModel->find($filter, $limit);
+    try {
+      $salesModel = new SalesModel();
+      $filter = $data && isset($data['filter']) ? $data['filter'] : null;
+      $limit = $data && isset($data['limit']) ? $data['limit'] : null;
+      $condition = $data && isset($data['condition']) ? $data['condition'] : null;
+      $results = $salesModel->find($filter, $limit, $condition);
 
-    if ($results) {
-      foreach ($results as $key => $result) {
-        $userModel = new UserModel($result->id_user);
-        $results[$key]->user = $userModel->getCurrentUser();
+      if ($results) {
+        foreach ($results as $key => $result) {
+          $userModel = new UserModel($result->id_user);
+          $results[$key]->user = $userModel->getCurrentUser();
 
-        $clientModel = new ClientsModel($result->id_client);
-        $results[$key]->client = $clientModel->getCurrentClient();
+          $clientModel = new ClientsModel($result->id_client);
+          $results[$key]->client = $clientModel->getCurrentClient();
 
-        $salesProducts = new SalesProductsModel();
-        $results[$key]->products = $salesProducts->find([
-          "id_sale" => $result->id
-        ]);
+          $salesProducts = new SalesProductsModel();
+          $results[$key]->products = $salesProducts->find([
+            "id_sale" => $result->id
+          ]);
 
-        foreach ($results[$key]->products as $k => $product) {
-          $productModel = new ProductsModel($product->id_product);
-          $results[$key]->products[$k]->product = $productModel->getCurrentProduct();
+          foreach ($results[$key]->products as $k => $product) {
+            $productModel = new ProductsModel($product->id_product);
+            $results[$key]->products[$k]->product = $productModel->getCurrentProduct();
+          }
         }
       }
-    }
 
-    if ($results) {
-      http_response_code(200); // OK
+      http_response_code(200);
       echo json_encode(array(
         "message" => "Results found",
         "results" => $results
       ));
-    } else {
-      http_response_code(404); // Not Found
-      echo json_encode(['error' => 'No results found for the given filter']);
+    } catch (\Exception $e) {
+      http_response_code(404);
+      echo json_encode(['error' => $e->getMessage()]);
     }
   }
 

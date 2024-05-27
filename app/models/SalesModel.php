@@ -64,7 +64,7 @@ class SalesModel extends Connection
     return $data;
   }
 
-  public function find($filter = [], $limit = null)
+  public function find($filter = [], $limit = null, $condition = null)
   {
     $sql = "SELECT * FROM {$this->table} WHERE 1 = 1 ";
 
