@@ -5,6 +5,7 @@ namespace App\Routers;
 use App\Controllers\BalanceController;
 use App\Controllers\BrandsController;
 use App\Controllers\CaixasController;
+use App\Controllers\CaixasMovController;
 use App\Controllers\CategoryController;
 use App\Controllers\ClientsController;
 use App\Controllers\CompanyController;
@@ -266,6 +267,20 @@ class Routers
         $data = json_decode(file_get_contents('php://input'), true);
         $caixasController = new CaixasController($id);
         $caixasController->update($data);
+      });
+
+      $router->mount('/mov', function () use ($router) {
+        $router->post('/list', function () {
+          $data = json_decode(file_get_contents('php://input'), true);
+          $caixasController = new CaixasMovController();
+          $caixasController->find($data);
+        });
+
+        $router->post('/insert', function () {
+          $data = json_decode(file_get_contents('php://input'), true);
+          $caixasController = new CaixasMovController();
+          $caixasController->create($data);
+        });
       });
     });
 

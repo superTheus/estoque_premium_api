@@ -12,7 +12,11 @@ class CaixasModel extends Connection
   private $id_company;
   private $id_user;
   private $value_init;
-  private $value_final;
+  private $value_debit;
+  private $value_credit;
+  private $value_money;
+  private $value_others;
+  private $observacoes;
   private $status;
   private $table = 'caixas';
 
@@ -40,7 +44,11 @@ class CaixasModel extends Connection
       $this->setId_company($caixa['id_company']);
       $this->setId_user($caixa['id_user']);
       $this->setValue_init($caixa['value_init']);
-      $this->setValue_final($caixa['value_final']);
+      $this->setValue_debit($caixa['value_debit']);
+      $this->setValue_credit($caixa['value_credit']);
+      $this->setValue_money($caixa['value_money']);
+      $this->setValue_others($caixa['value_others']);
+      $this->setObservacoes($caixa['observacoes']);
       $this->setStatus($caixa['status']);
     } catch (\PDOException $e) {
       echo $e->getMessage();
@@ -54,7 +62,11 @@ class CaixasModel extends Connection
     $data->id_company = $this->getId_company();
     $data->id_user = $this->getId_user();
     $data->value_init = $this->getValue_init();
-    $data->value_final = $this->getValue_final();
+    $data->value_debit = $this->getValue_debit();
+    $data->value_credit = $this->getValue_credit();
+    $data->value_money = $this->getValue_money();
+    $data->value_others = $this->getValue_others();
+    $data->observacoes = $this->getObservacoes();
     $data->status = $this->getStatus();
     return $data;
   }
@@ -69,6 +81,8 @@ class CaixasModel extends Connection
         return "$column = :$column";
       }, array_keys($filter)));
     }
+
+    $sql .= " ORDER BY id DESC";
 
     if ($limit !== null) {
       $sql .= " LIMIT :limit";
@@ -97,7 +111,8 @@ class CaixasModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (id_company, id_user, value_init) VALUES (:id_company, :id_user, :value_init)";
+    $sql = "INSERT INTO {$this->table} (id_company, id_user, value_init) 
+            VALUES (:id_company, :id_user, :value_init)";
 
     try {
       $stmt = $this->conn->prepare($sql);
@@ -117,7 +132,12 @@ class CaixasModel extends Connection
   public function update($data)
   {
     $sql = "UPDATE {$this->table} SET 
-              value_final = :value_final, status = :status 
+              value_debit = :value_debit,
+              value_credit = :value_credit,
+              value_money = :value_money,
+              value_others = :value_others,
+              observacoes = :observacoes,
+              status = :status 
             WHERE id = :id";
 
 
@@ -127,7 +147,11 @@ class CaixasModel extends Connection
 
     try {
       $stmt = $this->conn->prepare($sql);
-      $stmt->bindValue(':value_final', $this->value_final);
+      $stmt->bindValue(':value_debit', $this->value_debit);
+      $stmt->bindValue(':value_credit', $this->value_credit);
+      $stmt->bindValue(':value_money', $this->value_money);
+      $stmt->bindValue(':value_others', $this->value_others);
+      $stmt->bindValue(':observacoes', $this->observacoes);
       $stmt->bindValue(':status', $this->status);
       $stmt->bindParam(':id', $this->id);
       $stmt->execute();
@@ -233,26 +257,6 @@ class CaixasModel extends Connection
   }
 
   /**
-   * Get the value of value_final
-   */
-  public function getValue_final()
-  {
-    return $this->value_final;
-  }
-
-  /**
-   * Set the value of value_final
-   *
-   * @return  self
-   */
-  public function setValue_final($value_final)
-  {
-    $this->value_final = $value_final;
-
-    return $this;
-  }
-
-  /**
    * Get the value of status
    */
   public function getStatus()
@@ -268,6 +272,106 @@ class CaixasModel extends Connection
   public function setStatus($status)
   {
     $this->status = $status;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of value_debit
+   */
+  public function getValue_debit()
+  {
+    return $this->value_debit;
+  }
+
+  /**
+   * Set the value of value_debit
+   *
+   * @return  self
+   */
+  public function setValue_debit($value_debit)
+  {
+    $this->value_debit = $value_debit;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of value_credit
+   */
+  public function getValue_credit()
+  {
+    return $this->value_credit;
+  }
+
+  /**
+   * Set the value of value_credit
+   *
+   * @return  self
+   */
+  public function setValue_credit($value_credit)
+  {
+    $this->value_credit = $value_credit;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of value_money
+   */
+  public function getValue_money()
+  {
+    return $this->value_money;
+  }
+
+  /**
+   * Set the value of value_money
+   *
+   * @return  self
+   */
+  public function setValue_money($value_money)
+  {
+    $this->value_money = $value_money;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of value_others
+   */
+  public function getValue_others()
+  {
+    return $this->value_others;
+  }
+
+  /**
+   * Set the value of value_others
+   *
+   * @return  self
+   */
+  public function setValue_others($value_others)
+  {
+    $this->value_others = $value_others;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of observacoes
+   */
+  public function getObservacoes()
+  {
+    return $this->observacoes;
+  }
+
+  /**
+   * Set the value of observacoes
+   *
+   * @return  self
+   */
+  public function setObservacoes($observacoes)
+  {
+    $this->observacoes = $observacoes;
 
     return $this;
   }

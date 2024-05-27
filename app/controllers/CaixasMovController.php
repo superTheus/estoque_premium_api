@@ -2,31 +2,25 @@
 
 namespace App\Controllers;
 
-use App\Models\CaixasModel;
-use App\Models\UserModel;
+use App\Models\CaixasMovModel;
 
-class CaixasController
+class CaixasMovController
 {
   protected $caixasModel;
 
   public function __construct($id = null)
   {
-    $this->caixasModel = new CaixasModel($id ? $id : null);
+    $this->caixasModel = new CaixasMovModel($id ? $id : null);
   }
 
   public function find($data)
   {
-    $caixasModel = new CaixasModel();
+    $caixasModel = new CaixasMovModel();
     $filter = $data && isset($data['filter']) ? $data['filter'] : null;
     $limit = $data && isset($data['limit']) ? $data['limit'] : null;
     $results = $caixasModel->find($filter, $limit);
 
     if ($results) {
-
-      foreach ($results as $key => $r) {
-        $results[$key]['user'] = (new UserModel())->find(["id" => $r['id_user']])[0];
-      }
-
       http_response_code(200); // OK
       echo json_encode(array(
         "message" => "Results found",
@@ -50,22 +44,6 @@ class CaixasController
     } else {
       http_response_code(404); // Not Found
       echo json_encode(['error' => 'Data not created successfully']);
-    }
-  }
-
-  public function update($data)
-  {
-    $result = $this->caixasModel->update($data);
-
-    if ($result) {
-      http_response_code(200); // OK
-      echo json_encode(array(
-        "message" => "Data updated successfully",
-        "results" => $result
-      ));
-    } else {
-      http_response_code(404); // Not Found
-      echo json_encode(['error' => 'Data not updated successfully']);
     }
   }
 }
