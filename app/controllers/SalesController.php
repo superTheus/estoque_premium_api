@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\ClientsModel;
+use App\Models\PayFormsModel;
 use App\Models\ProductsModel;
 use App\Models\SalePayFormsModel;
 use App\Models\SalesModel;
@@ -32,6 +33,9 @@ class SalesController
           $userModel = new UserModel($result->id_user);
           $results[$key]->user = $userModel->getCurrentUser();
 
+          $userModel = new UserModel($result->id_seller);
+          $results[$key]->seller = $userModel->getCurrentUser();
+
           $clientModel = new ClientsModel($result->id_client);
           $results[$key]->client = $clientModel->getCurrentClient();
 
@@ -39,6 +43,18 @@ class SalesController
           $results[$key]->products = $salesProducts->find([
             "id_sale" => $result->id
           ]);
+
+          $salesPayFormsModel = new SalePayFormsModel();
+          $results[$key]->payforms = $salesPayFormsModel->find([
+            "id_sale" => $result->id
+          ]);
+
+          if ($results[$key]->payforms) {
+            foreach ($results[$key]->payforms as $k => $payform) {
+              $formsModel = new PayFormsModel($payform->id_form);
+              $results[$key]->payforms[$k]->payform = $formsModel->getCurrentSaleForm();
+            }
+          }
 
           foreach ($results[$key]->products as $k => $product) {
             $productModel = new ProductsModel($product->id_product);

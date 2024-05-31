@@ -38,12 +38,14 @@ class SalePayFormsModel extends Connection
 
       $category = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-      $this->setId_form($category['id_form']);
-      $this->setId_sale($category['id_sale']);
-      $this->setDate($category['date']);
-      $this->setValue($category['value']);
-      $this->setPortion_number($category['portion_number']);
-      $this->setPortion_total($category['portion_total']);
+      if ($category) {
+        $this->setId_form($category['id_form']);
+        $this->setId_sale($category['id_sale']);
+        $this->setDate($category['date']);
+        $this->setValue($category['value']);
+        $this->setPortion_number($category['portion_number']);
+        $this->setPortion_total($category['portion_total']);
+      }
     } catch (\PDOException $e) {
       echo $e->getMessage();
     }

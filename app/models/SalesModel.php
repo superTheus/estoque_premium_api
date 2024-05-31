@@ -12,6 +12,7 @@ class SalesModel extends Connection
   private $id_company;
   private $id_user;
   private $id_client;
+  private $id_seller;
   private $total;
   private $deleted;
   private $status;
@@ -43,6 +44,9 @@ class SalesModel extends Connection
       $this->setId_company($sale['id_company']);
       $this->setId_user($sale['id_user']);
       $this->setId_client($sale['id_client']);
+      $this->setId_seller($sale['id_seller']);
+      $this->setStatus($sale['status']);
+      $this->setDate_hour($sale['date_hour']);
       $this->setTotal($sale['total']);
       $this->setDeleted($sale['deleted']);
     } catch (\PDOException $e) {
@@ -57,6 +61,7 @@ class SalesModel extends Connection
     $data->id_company = $this->getId_company();
     $data->id_user = $this->getId_user();
     $data->id_client = $this->getId_client();
+    $data->id_seller = $this->getId_seller();
     $data->total = $this->getTotal();
     $data->status = $this->getStatus();
     $data->date_hour = $this->getDate_hour();
@@ -113,12 +118,14 @@ class SalesModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (id_company, total) VALUES (:id_company, :total)";
+    $sql = "INSERT INTO {$this->table} (id_company, total, id_user, id_seller) VALUES (:id_company, :total, :id_user, :id_seller)";
 
     try {
       $stmt = $this->conn->prepare($sql);
       $stmt->bindValue(':id_company', $data['id_company']);
       $stmt->bindValue(':total', $data['total']);
+      $stmt->bindValue(':id_user', $data['id_user']);
+      $stmt->bindValue(':id_seller', $data['id_seller']);
       $stmt->execute();
 
       $this->setId($this->conn->lastInsertId());
@@ -131,7 +138,7 @@ class SalesModel extends Connection
 
   public function update($data)
   {
-    $sql = "UPDATE {$this->table} SET total = :total, status = :status, id_client = :id_client, id_user = :id_user, deleted = :deleted WHERE id = :id";
+    $sql = "UPDATE {$this->table} SET total = :total, status = :status, id_client = :id_client, id_seller = :id_seller, deleted = :deleted WHERE id = :id";
 
 
     foreach ($data as $column => $value) {
@@ -143,7 +150,7 @@ class SalesModel extends Connection
       $stmt->bindParam(':total', $this->total);
       $stmt->bindParam(':status', $this->status);
       $stmt->bindParam(':id_client', $this->id_client);
-      $stmt->bindParam(':id_user', $this->id_user);
+      $stmt->bindParam(':id_seller', $this->id_seller);
       $stmt->bindParam(':deleted', $this->deleted);
       $stmt->bindParam(':id', $this->id);
       $stmt->execute();
@@ -324,6 +331,26 @@ class SalesModel extends Connection
   public function setId_client($id_client)
   {
     $this->id_client = $id_client;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of id_seller
+   */
+  public function getId_seller()
+  {
+    return $this->id_seller;
+  }
+
+  /**
+   * Set the value of id_seller
+   *
+   * @return  self
+   */
+  public function setId_seller($id_seller)
+  {
+    $this->id_seller = $id_seller;
 
     return $this;
   }
