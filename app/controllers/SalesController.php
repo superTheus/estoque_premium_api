@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\ClientsModel;
+use App\Models\ImagesProductsModel;
 use App\Models\PayFormsModel;
 use App\Models\ProductsModel;
 use App\Models\SalePayFormsModel;
@@ -59,6 +60,10 @@ class SalesController
           foreach ($results[$key]->products as $k => $product) {
             $productModel = new ProductsModel($product->id_product);
             $results[$key]->products[$k]->product = $productModel->getCurrentProduct();
+
+            $imagesProductsModel = new ImagesProductsModel();
+            $images = $imagesProductsModel->find(['id_product' => $results[$key]->products[$k]->product->id]);
+            $results[$key]->products[$k]->product->images = $images;
           }
         }
       }
