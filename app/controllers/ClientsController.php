@@ -34,6 +34,7 @@ class ClientsController
 
   public function create($data)
   {
+    $data['order'] = 1;
     $result = $this->clientModel->create($data);
     if ($result) {
       http_response_code(200); // OK

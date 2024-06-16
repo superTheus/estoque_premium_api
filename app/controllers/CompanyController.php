@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\ClientsModel;
 use App\Models\CompanyModel;
 use App\Models\PasswordLastsModel;
 use App\Models\UserModel;
@@ -48,7 +49,18 @@ class CompanyController
   public function create($data)
   {
     $result = $this->userModel->create($data);
+
     if ($result) {
+      $data = [
+        "name" => "Consumidor Final",
+        "id_company" => $result->id,
+        "show_client" => 'N',
+        "order" => 0
+      ];
+
+      $clientModel = new ClientsModel();
+      $clientModel->create($data);
+
       http_response_code(200); // OK
       echo json_encode(array(
         "message" => "Data created successfully",

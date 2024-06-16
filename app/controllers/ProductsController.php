@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\BrandsModel;
 use App\Models\CategorysModel;
+use App\Models\ImagesProductsModel;
 use App\Models\ProductsModel;
 use App\Models\SubcategorysModel;
 use App\Models\SupplierModel;
@@ -37,6 +38,10 @@ class ProductsController
 
       $supplier = new SupplierModel($value['id_fornecedor']);
       $results[$key]['supplier'] = $supplier->getCurrentSupplier();
+
+      $imagesProductsModel = new ImagesProductsModel();
+      $images = $imagesProductsModel->find(['id_product' => $value['id']]);
+      $results[$key]['images'] = $images;
     }
 
     http_response_code(200); // OK
@@ -50,6 +55,20 @@ class ProductsController
   {
     $result = $this->productsModel->create($data);
     if ($result) {
+
+      if ($data['images']) {
+        foreach ($data['images'] as $key => $value) {
+          $imagesProductsModel = new ImagesProductsModel();
+
+          $dataImages = [
+            'id_product' => $result->id,
+            'image' => $value
+          ];
+
+          $imagesProductsModel->create($dataImages);
+        }
+      }
+
       http_response_code(200); // OK
       echo json_encode(array(
         "message" => "Data created successfully",
@@ -64,6 +83,30 @@ class ProductsController
   public function update($data)
   {
     $result = $this->productsModel->update($data);
+
+    if ($result) {
+      $imagesProductsModel = new ImagesProductsModel();
+      $images = $imagesProductsModel->find(['id_product' => $result->id]);
+
+      if ($images) {
+        foreach ($images as $key => $value) {
+          $imagesProductsModel->delete($value->id);
+        }
+      }
+
+      if ($data['images']) {
+        foreach ($data['images'] as $key => $value) {
+          $imagesProductsModel = new ImagesProductsModel();
+
+          $dataImages = [
+            'id_product' => $result->id,
+            'image' => $value
+          ];
+
+          $imagesProductsModel->create($dataImages);
+        }
+      }
+    }
 
     if ($result) {
       http_response_code(200); // OK

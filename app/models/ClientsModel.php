@@ -27,6 +27,7 @@ class ClientsModel extends Connection
   private $genero;
   private $deleted;
   private $show_client;
+  private $order;
   private $table = 'clients';
 
   public function __construct($id = null)
@@ -113,6 +114,8 @@ class ClientsModel extends Connection
       $sql .= " LIMIT :limit";
     }
 
+    $sql .= " ORDER BY orders ASC";
+
     try {
       $stmt = $this->conn->prepare($sql);
 
@@ -136,8 +139,8 @@ class ClientsModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (name, apelido, razao_social, rg_inscricao, email, celular, cep, endereco, documento, cidade, numero, bairro, complemento, data_nascimento, icms, genero, id_company) 
-            VALUES (:name, :apelido, :razao_social, :rg_inscricao, :email, :celular, :cep, :endereco, :documento, :cidade, :numero, :bairro, :complemento, :data_nascimento, :icms, :genero, :id_company)";
+    $sql = "INSERT INTO {$this->table} (name, apelido, razao_social, rg_inscricao, email, celular, cep, endereco, documento, cidade, numero, bairro, complemento, data_nascimento, icms, genero, id_company, orders, show_client) 
+            VALUES (:name, :apelido, :razao_social, :rg_inscricao, :email, :celular, :cep, :endereco, :documento, :cidade, :numero, :bairro, :complemento, :data_nascimento, :icms, :genero, :id_company, :order, :show_client)";
 
     try {
       $stmt = $this->conn->prepare($sql);
@@ -158,6 +161,8 @@ class ClientsModel extends Connection
       $stmt->bindValue(':icms', isset($data['icms']) ? $data['icms'] : null);
       $stmt->bindValue(':genero', isset($data['genero']) ? $data['genero'] : null);
       $stmt->bindValue(':id_company', isset($data['id_company']) ? $data['id_company'] : null);
+      $stmt->bindValue(':order', isset($data['order']) ? $data['order'] : null);
+      $stmt->bindValue(':show_client', isset($data['show_client']) ? $data['show_client'] : 'S');
       $stmt->execute();
 
       $this->setId($this->conn->lastInsertId());
@@ -613,6 +618,26 @@ class ClientsModel extends Connection
   public function setShow_client($show_client)
   {
     $this->show_client = $show_client;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of order
+   */
+  public function getOrder()
+  {
+    return $this->order;
+  }
+
+  /**
+   * Set the value of order
+   *
+   * @return  self
+   */
+  public function setOrder($order)
+  {
+    $this->order = $order;
 
     return $this;
   }
