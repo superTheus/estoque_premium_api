@@ -9,26 +9,27 @@ class CompanyModel extends Connection
 {
   private $conn;
   private $id;
-  private $nome;
-  private $sobrenome;
   private $cnpj;
   private $razao_social;
   private $nome_fantasia;
-  private $telefone;
+  private $inscricao_estadual;
+  private $inscricao_municipal;
   private $email;
+  private $telefone;
   private $cep;
   private $logradouro;
   private $numero;
   private $bairro;
   private $cidade;
   private $uf;
-  private $datahora;
   private $certificate;
+  private $cetificate_name;
   private $password;
   private $csc;
   private $csc_id;
-  private $type;
   private $ativo;
+  private $type;
+  private $datahora;
   private $table = 'company';
 
   public function __construct($id = null)
@@ -81,6 +82,8 @@ class CompanyModel extends Connection
     $data->cnpj = $this->getCnpj();
     $data->razao_social = $this->getRazao_social();
     $data->nome_fantasia = $this->getNome_fantasia();
+    $data->inscricao_estadual = $this->getInscricao_estadual();
+    $data->inscricao_municipal = $this->getInscricao_municipal();
     $data->telefone = $this->getTelefone();
     $data->email = $this->getEmail();
     $data->cep = $this->getCep();
@@ -91,6 +94,7 @@ class CompanyModel extends Connection
     $data->uf = $this->getUf();
     $data->datahora = $this->getDatahora();
     $data->certificate = $this->getCertificate();
+    $data->cetificate_name = $this->getCetificate_name();
     $data->password = $this->getPassword();
     $data->csc = $this->getCsc();
     $data->csc_id = $this->getCsc_id();
@@ -136,24 +140,29 @@ class CompanyModel extends Connection
 
   public function create($data)
   {
-    $sql = "INSERT INTO {$this->table} (nome, sobrenome, cnpj, razao_social, nome_fantasia, telefone, email, cep, logradouro, numero, bairro, cidade, uf) 
-    VALUES (:nome, :sobrenome, :cnpj, :razao_social, :nome_fantasia, :telefone, :email, :cep, :logradouro, :numero, :bairro, :cidade, :uf)";
+    $sql = "INSERT INTO {$this->table} (cnpj, razao_social, nome_fantasia, inscricao_estadual, inscricao_municipal, telefone, email, cep, logradouro, numero, bairro, cidade, uf) 
+    VALUES (:cnpj, :razao_social, :nome_fantasia, :inscricao_estadual, :inscricao_municipal, :telefone, :email, :cep, :logradouro, :numero, :bairro, :cidade, :uf)";
 
     try {
       $stmt = $this->conn->prepare($sql);
-      $stmt->bindParam(':nome', $data['nome']);
-      $stmt->bindParam(':sobrenome', $data['sobrenome']);
       $stmt->bindParam(':cnpj', $data['cnpj']);
       $stmt->bindParam(':razao_social', $data['razao_social']);
       $stmt->bindParam(':nome_fantasia', $data['nome_fantasia']);
-      $stmt->bindParam(':telefone', $data['telefone']);
+      $stmt->bindParam(':inscricao_estadual', $data['inscricao_estadual']);
+      $stmt->bindParam(':inscricao_municipal', $data['inscricao_municipal']);
       $stmt->bindParam(':email', $data['email']);
+      $stmt->bindParam(':telefone', $data['telefone']);
       $stmt->bindParam(':cep', $data['cep']);
       $stmt->bindParam(':logradouro', $data['logradouro']);
       $stmt->bindParam(':numero', $data['numero']);
       $stmt->bindParam(':bairro', $data['bairro']);
       $stmt->bindParam(':cidade', $data['cidade']);
       $stmt->bindParam(':uf', $data['uf']);
+      $stmt->bindParam(':certificate', $data['certificate']);
+      $stmt->bindParam(':password', $data['password']);
+      $stmt->bindParam(':csc', $data['csc']);
+      $stmt->bindParam(':csc_id', $data['csc_id']);
+
       $stmt->execute();
 
       $this->setId($this->conn->lastInsertId());
@@ -167,10 +176,11 @@ class CompanyModel extends Connection
   public function update($data)
   {
     $sql = "UPDATE {$this->table} 
-            SET nome = :nome, sobrenome = :sobrenome, cnpj = :cnpj, razao_social = :razao_social, 
-              nome_fantasia = :nome_fantasia, telefone = :telefone, email = :email, cep = :cep, 
+            SET cnpj = :cnpj, razao_social = :razao_social, nome_fantasia = :nome_fantasia, 
+              inscricao_estadual = :inscricao_estadual, inscricao_municipal = :inscricao_municipal, 
+              telefone = :telefone, email = :email, cep = :cep, 
               logradouro = :logradouro, numero = :numero, bairro = :bairro, cidade = :cidade, 
-              uf = :uf, datahora = :datahora, certificate = :certificate, password = :password, 
+              uf = :uf, datahora = :datahora, certificate = :certificate, cetificate_name = :cetificate_name, password = :password, 
               csc = :csc, csc_id = :csc_id, ativo  = :ativo
             WHERE id = :id";
 
@@ -182,11 +192,11 @@ class CompanyModel extends Connection
     try {
       $stmt = $this->conn->prepare($sql);
       $stmt->bindParam(':id', $this->id);
-      $stmt->bindParam(':nome', $this->nome);
-      $stmt->bindParam(':sobrenome', $this->sobrenome);
       $stmt->bindParam(':cnpj', $this->cnpj);
       $stmt->bindParam(':razao_social', $this->razao_social);
       $stmt->bindParam(':nome_fantasia', $this->nome_fantasia);
+      $stmt->bindParam(':inscricao_estadual', $this->inscricao_estadual);
+      $stmt->bindParam(':inscricao_municipal', $this->inscricao_municipal);
       $stmt->bindParam(':telefone', $this->telefone);
       $stmt->bindParam(':email', $this->email);
       $stmt->bindParam(':cep', $this->cep);
@@ -197,6 +207,7 @@ class CompanyModel extends Connection
       $stmt->bindParam(':uf', $this->uf);
       $stmt->bindParam(':datahora', $this->datahora);
       $stmt->bindParam(':certificate', $this->certificate);
+      $stmt->bindParam(':cetificate_name', $this->cetificate_name);
       $stmt->bindParam(':password', $this->password);
       $stmt->bindParam(':csc', $this->csc);
       $stmt->bindParam(':csc_id', $this->csc_id);
@@ -584,46 +595,6 @@ class CompanyModel extends Connection
   }
 
   /**
-   * Get the value of nome
-   */
-  public function getNome()
-  {
-    return $this->nome;
-  }
-
-  /**
-   * Set the value of nome
-   *
-   * @return  self
-   */
-  public function setNome($nome)
-  {
-    $this->nome = $nome;
-
-    return $this;
-  }
-
-  /**
-   * Get the value of sobrenome
-   */
-  public function getSobrenome()
-  {
-    return $this->sobrenome;
-  }
-
-  /**
-   * Set the value of sobrenome
-   *
-   * @return  self
-   */
-  public function setSobrenome($sobrenome)
-  {
-    $this->sobrenome = $sobrenome;
-
-    return $this;
-  }
-
-  /**
    * Get the value of ativo
    */
   public function getAtivo()
@@ -639,6 +610,66 @@ class CompanyModel extends Connection
   public function setAtivo($ativo)
   {
     $this->ativo = $ativo;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of inscricao_estadual
+   */
+  public function getInscricao_estadual()
+  {
+    return $this->inscricao_estadual;
+  }
+
+  /**
+   * Set the value of inscricao_estadual
+   *
+   * @return  self
+   */
+  public function setInscricao_estadual($inscricao_estadual)
+  {
+    $this->inscricao_estadual = $inscricao_estadual;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of inscricao_municipal
+   */
+  public function getInscricao_municipal()
+  {
+    return $this->inscricao_municipal;
+  }
+
+  /**
+   * Set the value of inscricao_municipal
+   *
+   * @return  self
+   */
+  public function setInscricao_municipal($inscricao_municipal)
+  {
+    $this->inscricao_municipal = $inscricao_municipal;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of cetificate_name
+   */
+  public function getCetificate_name()
+  {
+    return $this->cetificate_name;
+  }
+
+  /**
+   * Set the value of cetificate_name
+   *
+   * @return  self
+   */
+  public function setCetificate_name($cetificate_name)
+  {
+    $this->cetificate_name = $cetificate_name;
 
     return $this;
   }

@@ -19,6 +19,8 @@ use App\Controllers\SubcategoryController;
 use App\Controllers\SupplierController;
 use App\Controllers\UsersController;
 use App\Controllers\ContaController;
+use App\Controllers\EstadoController;
+use App\Controllers\MunicipioController;
 use App\Controllers\PermissoesSistemaController;
 use App\Controllers\UsersPermissoesController;
 use Bramus\Router\Router;
@@ -42,6 +44,31 @@ class Routers
     // Static route: / (homepage)
     $router->get('/', function () {
       echo 'Home';
+    });
+
+    $router->mount('/estados', function () use ($router) {
+      $router->get('/', function () {
+        $estadosController = new EstadoController();
+        $estadosController->find([]);
+      });
+
+      $router->get('/(\w+)', function ($uf) {
+        $estadosController = new EstadoController();
+        $estadosController->find([
+          "filter" => [
+            "uf" => $uf
+          ]
+        ]);
+      });
+
+      $router->get('/municipios/(\w+)', function ($uf) {
+        $municipioController = new MunicipioController();
+        $municipioController->find([
+          "filter" => [
+            "uf" => $uf
+          ]
+        ]);
+      });
     });
 
     $router->mount('/user', function () use ($router) {
